@@ -240,19 +240,29 @@
 
 .action-buttons {
     display: flex;
+    flex-wrap: wrap;
     gap: 16px;
+    width: 100%;
 }
 
 .action-btn {
-    padding: 16px 24px;
+    padding: 16px;
     border-radius: 12px;
     font-size: 14px;
     font-weight: 600;
     text-decoration: none;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
     transition: all 0.3s ease;
+    flex: 1;
+    min-width: 260px;
+    text-align: center;
+    white-space: normal;
+    height: 100%;
+    min-height: 60px;
+    width: 100%;
 }
 
 .action-btn.primary {
@@ -315,9 +325,5 @@
 
     .stats-grid {
         grid-template-columns: 1fr;
-    }
-
-    .action-buttons {
-        flex-direction: column;
     }
 }

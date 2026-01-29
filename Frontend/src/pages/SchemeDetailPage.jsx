@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { schemesAPI } from '../services/api';
+import SchemeDetailSkeleton from '../components/SchemeDetailSkeleton';
 import './SchemeDetailPage.css';
 
 const SchemeDetailPage = () => {
@@ -25,11 +26,7 @@ const SchemeDetailPage = () => {
     };
 
     if (loading) {
-        return (
-            <div className="scheme-detail-page">
-                <div className="loading-container">Loading...</div>
-            </div>
-        );
+        return <SchemeDetailSkeleton />;
     }
 
     if (!scheme) {

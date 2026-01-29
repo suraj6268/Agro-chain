@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { authAPI } from '../../services/api';
+import AdminsGridSkeleton from './AdminsGridSkeleton';
 import './SuperAdmin.css';
 
 const SuperAdmin = () => {
@@ -106,7 +107,7 @@ const SuperAdmin = () => {
                 </div>
 
                 {loading ? (
-                    <div className="loading">Loading admins...</div>
+                    <AdminsGridSkeleton />
                 ) : (
                     <div className="admins-grid">
                         {admins.map(a => (

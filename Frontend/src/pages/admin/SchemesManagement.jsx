@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { schemesAPI } from '../../services/api';
+import SchemesTableSkeleton from './SchemesTableSkeleton';
 import './SchemesManagement.css';
 
 const CATEGORIES = [
@@ -170,7 +171,7 @@ const SchemesManagement = () => {
                 </div>
 
                 {loading ? (
-                    <div className="loading">Loading schemes...</div>
+                    <SchemesTableSkeleton />
                 ) : (
                     <div className="schemes-table">
                         <table>
