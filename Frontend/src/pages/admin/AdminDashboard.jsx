@@ -142,25 +142,23 @@ const AdminDashboard = () => {
                             <h2>Quick Actions</h2>
                             <div className="action-buttons">
                                 <Link to="/admin/schemes" className="action-btn primary">
-                                    <span>📋 Manage Schemes</span>
+                                    <span>📋</span> Manage Schemes
                                 </Link>
                                 {isSuperAdmin() && (
                                     <Link to="/admin/users" className="action-btn secondary">
-                                        <span>👥 Manage Admins</span>
+                                        <span>👥</span> Manage Admins
                                     </Link>
                                 )}
-                                <Link to="/admin/inventory" className="action-btn primary" style={{ background: '#e65100' }}>
-                                    <span>📦 Manage Stock</span>
-                                </Link>
                                 <a href="/" target="_blank" className="action-btn outline">
-                                    <span>🌐 View Public Site</span>
+                                    <span>🌐</span> View Public Site
                                 </a>
+
                             </div>
                         </div>
                     </>
                 )}
             </main>
-        </div>
+        </div >
     );
 };
 
