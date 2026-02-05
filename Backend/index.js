@@ -8,6 +8,9 @@ const swaggerSpec = require('./config/swagger');
 // Import routes
 const schemeRoutes = require('./routes/schemeRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const productRoutes = require('./routes/productRoutes');
+const stockRoutes = require('./routes/stockRoutes');
+const distributionRoutes = require('./routes/distributionRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -68,6 +71,9 @@ app.get('/', (req, res) => {
 // API Routes
 app.use('/api/schemes', schemeRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/stock', stockRoutes);
+app.use('/api/distribution', distributionRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

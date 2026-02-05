@@ -7,6 +7,8 @@ import AdminLogin from './pages/admin/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import SchemesManagement from './pages/admin/SchemesManagement';
 import SuperAdmin from './pages/admin/SuperAdmin';
+import InventoryManagement from './pages/admin/InventoryManagement';
+import DistributorDashboard from './pages/distributor/DistributorDashboard';
 
 function App() {
   return (
@@ -27,6 +29,14 @@ function App() {
           } />
           <Route path="/admin/users" element={
             <ProtectedRoute requireSuperAdmin><SuperAdmin /></ProtectedRoute>
+          } />
+          <Route path="/admin/inventory" element={
+            <ProtectedRoute><InventoryManagement /></ProtectedRoute>
+          } />
+
+          {/* Distributor Routes */}
+          <Route path="/distributor/dashboard" element={
+            <ProtectedRoute><DistributorDashboard /></ProtectedRoute>
           } />
         </Routes>
       </Router>

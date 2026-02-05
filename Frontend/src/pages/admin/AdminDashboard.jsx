@@ -46,6 +46,7 @@ const AdminDashboard = () => {
                 <div className="nav-links">
                     <Link to="/admin/dashboard" className="nav-link active">Dashboard</Link>
                     <Link to="/admin/schemes" className="nav-link">Schemes</Link>
+                    <Link to="/admin/inventory" className="nav-link">Inventory</Link>
                     {isSuperAdmin() && (
                         <Link to="/admin/users" className="nav-link">Admins</Link>
                     )}
@@ -149,6 +150,9 @@ const AdminDashboard = () => {
                                 <span>👥 Manage Admins</span>
                             </Link>
                         )}
+                        <Link to="/admin/inventory" className="action-btn primary" style={{ background: '#e65100' }}>
+                            <span>📦 Manage Stock</span>
+                        </Link>
                         <a href="/" target="_blank" className="action-btn outline">
                             <span>🌐 View Public Site</span>
                         </a>
