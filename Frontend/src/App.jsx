@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import Navbar from './components/Navbar';
 import SchemesPage from './pages/SchemesPage';
 import SchemeDetailPage from './pages/SchemeDetailPage';
 import AdminLogin from './pages/admin/AdminLogin';
@@ -14,10 +15,13 @@ function App() {
   return (
     <AuthProvider>
       <Router>
+        <Navbar />
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<SchemesPage />} />
           <Route path="/scheme/:id" element={<SchemeDetailPage />} />
+          <Route path="/notifications" element={<div style={{ padding: '2rem' }}><h2>Notifications Page (Coming Soon)</h2></div>} />
+          <Route path="/distribution" element={<div style={{ padding: '2rem' }}><h2>Fertilizer and Schemes Distribution Page (Coming Soon)</h2></div>} />
 
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import SchemeCard from '../components/SchemeCard';
-import SchemeCardSkeleton from '../components/SchemeCardSkeleton';
 import { schemesAPI } from '../services/api';
 import './SchemesPage.css';
 
@@ -103,17 +102,15 @@ const SchemesPage = () => {
                     <Link to="/admin/login" className="admin-link">Admin Login →</Link>
                 </div>
 
-                <div className="schemes-grid">
-                    {loading ? (
-                        [...Array(6)].map((_, index) => (
-                            <SchemeCardSkeleton key={index} />
-                        ))
-                    ) : (
-                        filteredSchemes.map(scheme => (
+                {loading ? (
+                    <div className="loading-message">Loading schemes...</div>
+                ) : (
+                    <div className="schemes-grid">
+                        {filteredSchemes.map(scheme => (
                             <SchemeCard key={scheme._id} scheme={scheme} />
-                        ))
-                    )}
-                </div>
+                        ))}
+                    </div>
+                )}
 
                 {!loading && filteredSchemes.length === 0 && (
                     <div className="no-results">
