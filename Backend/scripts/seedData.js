@@ -36,12 +36,12 @@ const seedDatabase = async () => {
 
         // Create sample stock allocation for testing
         const stockSamples = [
-            { product: insertedProducts[0]._id, city: 'Delhi', totalAllocated: 1000, currentStock: 1000 },
-            { product: insertedProducts[1]._id, city: 'Delhi', totalAllocated: 500, currentStock: 500 },
-            { product: insertedProducts[0]._id, city: 'Pune', totalAllocated: 2000, currentStock: 1500, distributed: 500 }
+            { product: insertedProducts[0]._id, city: 'Gwalior', totalAllocated: 1000, currentStock: 1000 },
+            { product: insertedProducts[1]._id, city: 'Gwalior', totalAllocated: 500, currentStock: 500 },
+            { product: insertedProducts[0]._id, city: 'Ujjain', totalAllocated: 2000, currentStock: 1500, distributed: 500 }
         ];
         await Stock.insertMany(stockSamples);
-        console.log(`Sample stock allocated to Delhi and Pune.`);
+        console.log(`Sample stock allocated to Gwalior and Ujjain.`);
 
         // Create text index for search
         try {

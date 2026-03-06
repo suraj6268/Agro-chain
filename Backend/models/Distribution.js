@@ -11,6 +11,11 @@ const distributionSchema = new mongoose.Schema({
         ref: 'Product',
         required: true
     },
+    farmerId: {
+        type: String,
+        required: [true, 'Farmer ID (e.g., Aadhaar) is required'],
+        trim: true
+    },
     farmerName: {
         type: String,
         required: [true, 'Farmer name is required'],
@@ -26,6 +31,11 @@ const distributionSchema = new mongoose.Schema({
         type: Number,
         required: [true, 'Quantity is required'],
         min: [1, 'Quantity must be at least 1']
+    },
+    village: {
+        type: String,
+        required: [true, 'Farmer village is required'],
+        trim: true
     },
     city: {
         type: String,

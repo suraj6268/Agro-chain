@@ -38,9 +38,10 @@ export const AuthProvider = ({ children }) => {
                 id: res.data.id,
                 username: res.data.username,
                 email: res.data.email,
-                role: res.data.role
+                role: res.data.role,
+                city: res.data.city
             });
-            return { success: true };
+            return { success: true, role: res.data.role };
         }
         return { success: false, message: res.message };
     };

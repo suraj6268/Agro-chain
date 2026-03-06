@@ -19,7 +19,11 @@ const AdminLogin = () => {
         const result = await login(email, password);
 
         if (result.success) {
-            navigate('/admin/dashboard');
+            if (result.role === 'distributor') {
+                navigate('/distributor/dashboard');
+            } else {
+                navigate('/admin/dashboard');
+            }
         } else {
             setError(result.message || 'Login failed. Please check your credentials.');
         }

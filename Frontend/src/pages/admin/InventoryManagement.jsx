@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { ShimmerTable } from '../../components/Shimmer';
 import './InventoryManagement.css';
 
 const InventoryManagement = () => {
-    const { token } = useAuth();
+    const token = localStorage.getItem('adminToken');
     const [products, setProducts] = useState([]);
+    const [stocks, setStocks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [view, setView] = useState('products'); // 'products' or 'allocation'
+    const [editingStock, setEditingStock] = useState(null);
 
     // New Product Form State
     const [newProduct, setNewProduct] = useState({
@@ -26,12 +29,33 @@ const InventoryManagement = () => {
 
     useEffect(() => {
         fetchProducts();
+        fetchStocks();
     }, []);
+
+    const fetchStocks = async () => {
+        try {
+            const res = await fetch('http://localhost:3000/api/stock', {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'ngrok-skip-browser-warning': 'true'
+                }
+            });
+            const data = await res.json();
+            if (data.success) {
+                setStocks(data.data);
+            }
+        } catch (err) {
+            console.error('Failed to fetch stocks', err);
+        }
+    };
 
     const fetchProducts = async () => {
         try {
             const res = await fetch('http://localhost:3000/api/products', {
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'ngrok-skip-browser-warning': 'true'
+                }
             });
             const data = await res.json();
             if (data.success) {
@@ -50,7 +74,8 @@ const InventoryManagement = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`,
+                    'ngrok-skip-browser-warning': 'true'
                 },
                 body: JSON.stringify(newProduct)
             });
@@ -67,6 +92,29 @@ const InventoryManagement = () => {
         }
     };
 
+    const handleDeleteProduct = async (id) => {
+        if (!window.confirm('Are you sure you want to delete this product?')) return;
+
+        try {
+            const res = await fetch(`http://localhost:3000/api/products/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'ngrok-skip-browser-warning': 'true'
+                }
+            });
+            const data = await res.json();
+            if (data.success) {
+                fetchProducts();
+            } else {
+                alert(data.message);
+            }
+        } catch (err) {
+            console.error('Failed to delete product', err);
+            alert('Failed to delete product');
+        }
+    };
+
     const handleAllocate = async (e) => {
         e.preventDefault();
         try {
@@ -74,7 +122,8 @@ const InventoryManagement = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`,
+                    'ngrok-skip-browser-warning': 'true'
                 },
                 body: JSON.stringify(allocation)
             });
@@ -82,6 +131,7 @@ const InventoryManagement = () => {
             if (data.success) {
                 alert('Stock allocated successfully');
                 setAllocation({ productId: '', city: '', quantity: '' });
+                fetchStocks();
             } else {
                 alert(data.message);
             }
@@ -90,7 +140,56 @@ const InventoryManagement = () => {
         }
     };
 
-    if (loading) return <div>Loading...</div>;
+    const handleEditStock = async (e, id) => {
+        e.preventDefault();
+        try {
+            const res = await fetch(`http://localhost:3000/api/stock/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                    'ngrok-skip-browser-warning': 'true'
+                },
+                body: JSON.stringify({ quantity: editingStock.totalAllocated })
+            });
+            const data = await res.json();
+            if (data.success) {
+                alert('Stock updated successfully');
+                setEditingStock(null);
+                fetchStocks();
+            } else {
+                alert(data.message);
+            }
+        } catch (err) {
+            console.error('Failed to update stock', err);
+            alert('Failed to update stock');
+        }
+    };
+
+    const handleDeleteStock = async (id) => {
+        if (!window.confirm('Are you sure you want to delete this allocation?')) return;
+
+        try {
+            const res = await fetch(`http://localhost:3000/api/stock/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'ngrok-skip-browser-warning': 'true'
+                }
+            });
+            const data = await res.json();
+            if (data.success) {
+                fetchStocks();
+            } else {
+                alert(data.message);
+            }
+        } catch (err) {
+            console.error('Failed to delete stock', err);
+            alert('Failed to delete stock');
+        }
+    };
+
+    if (loading) return <div className="admin-content"><ShimmerTable rows={6} /></div>;
 
     return (
         <div className="inventory-management">
@@ -182,6 +281,7 @@ const InventoryManagement = () => {
                                     <th>Type</th>
                                     <th>Brand</th>
                                     <th>Price</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -191,6 +291,15 @@ const InventoryManagement = () => {
                                         <td>{p.type}</td>
                                         <td>{p.brand}</td>
                                         <td>₹{p.pricePerUnit}/{p.unit}</td>
+                                        <td>
+                                            <button
+                                                onClick={() => handleDeleteProduct(p._id)}
+                                                className="action-btn delete"
+                                                title="Delete Product"
+                                            >
+                                                Delete
+                                            </button>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -219,13 +328,24 @@ const InventoryManagement = () => {
                             </div>
                             <div className="form-group">
                                 <label>City</label>
-                                <input
-                                    type="text"
+                                <select
                                     value={allocation.city}
                                     onChange={(e) => setAllocation({ ...allocation, city: e.target.value })}
                                     required
-                                    placeholder="Enter City Name"
-                                />
+                                >
+                                    <option value="" disabled>Select a city</option>
+                                    {[
+                                        "Ashoknagar", "Balaghat", "Barwani", "Betul", "Bhind", "Bhopal", "Burhanpur",
+                                        "Chhatarpur", "Chhindwara", "Damoh", "Datia", "Dewas", "Dhar", "Guna",
+                                        "Gwalior", "Harda", "Hoshangabad", "Indore", "Itarsi", "Jabalpur", "Jhabua",
+                                        "Katni", "Khandwa", "Khargone", "Mandsaur", "Morena", "Murwara", "Neemuch",
+                                        "Panna", "Pithampur", "Ratlam", "Rewa", "Sagar", "Satna", "Sehore", "Seoni",
+                                        "Shahdol", "Shajapur", "Sheopur", "Shivpuri", "Sidhi", "Singrauli", "Tikamgarh",
+                                        "Ujjain", "Vidisha"
+                                    ].map(city => (
+                                        <option key={city} value={city}>{city}</option>
+                                    ))}
+                                </select>
                             </div>
                             <div className="form-group">
                                 <label>Quantity to Add</label>
@@ -238,6 +358,57 @@ const InventoryManagement = () => {
                             </div>
                             <button type="submit" className="primary-btn">Allocate Stock</button>
                         </form>
+                    </div>
+
+                    <div className="products-list" style={{ marginTop: '2rem' }}>
+                        <h3>Allocated Stocks</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>City</th>
+                                    <th>Product</th>
+                                    <th>Total Allocated</th>
+                                    <th>Current Stock</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {stocks.map(stock => (
+                                    <tr key={stock._id}>
+                                        <td>{stock.city}</td>
+                                        <td>{stock.product ? `${stock.product.name} (${stock.product.brand})` : 'Unknown'}</td>
+                                        <td>
+                                            {editingStock && editingStock._id === stock._id ? (
+                                                <input
+                                                    type="number"
+                                                    value={editingStock.totalAllocated}
+                                                    onChange={(e) => setEditingStock({ ...editingStock, totalAllocated: e.target.value })}
+                                                    style={{ width: '100px', display: 'inline-block' }}
+                                                />
+                                            ) : (
+                                                stock.totalAllocated
+                                            )}
+                                        </td>
+                                        <td>{stock.currentStock}</td>
+                                        <td>
+                                            <div style={{ display: 'flex', gap: '8px' }}>
+                                                {editingStock && editingStock._id === stock._id ? (
+                                                    <>
+                                                        <button className="action-btn edit" style={{ width: 'auto', padding: '6px 14px' }} onClick={(e) => handleEditStock(e, stock._id)}>Save</button>
+                                                        <button className="action-btn delete" style={{ width: 'auto', padding: '6px 14px' }} onClick={() => setEditingStock(null)}>Cancel</button>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <button className="action-btn edit" style={{ width: 'auto', padding: '6px 14px' }} onClick={() => setEditingStock(stock)}>Edit</button>
+                                                        <button className="action-btn delete" style={{ width: 'auto', padding: '6px 14px' }} onClick={() => handleDeleteStock(stock._id)}>Delete</button>
+                                                    </>
+                                                )}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             )}

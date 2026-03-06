@@ -9,7 +9,9 @@ const {
     getAllAdmins,
     toggleAdminStatus,
     deleteAdmin,
-    setupSuperAdmin
+    setupSuperAdmin,
+    registerDistributor,
+    getAllDistributors
 } = require('../controllers/adminController');
 
 /**
@@ -273,7 +275,7 @@ router.get('/all', protect, authorize('superadmin'), getAllAdmins);
  *       404:
  *         description: Admin not found
  */
-router.patch('/:id/toggle', protect, authorize('superadmin'), toggleAdminStatus);
+router.patch('/:id/toggle', protect, authorize('admin', 'superadmin'), toggleAdminStatus);
 
 /**
  * @swagger
@@ -303,6 +305,68 @@ router.patch('/:id/toggle', protect, authorize('superadmin'), toggleAdminStatus)
  *       404:
  *         description: Admin not found
  */
-router.delete('/:id', protect, authorize('superadmin'), deleteAdmin);
+router.delete('/:id', protect, authorize('admin', 'superadmin'), deleteAdmin);
+
+/**
+ * @swagger
+ * /api/admin/distributor/register:
+ *   post:
+ *     summary: Register a new distributor
+ *     description: Create a new distributor account assigned to a specific city. Requires admin or superadmin role.
+ *     tags: [Admin - Distributor Management]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - email
+ *               - password
+ *               - city
+ *             properties:
+ *               username:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               password:
+ *                 type: string
+ *                 format: password
+ *               city:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Distributor registered successfully
+ *       400:
+ *         description: Validation error or missing city
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ */
+router.post('/distributor/register', protect, authorize('admin', 'superadmin'), registerDistributor);
+
+/**
+ * @swagger
+ * /api/admin/distributors:
+ *   get:
+ *     summary: Get all distributors
+ *     description: Retrieve all distributor accounts. Requires admin or superadmin role.
+ *     tags: [Admin - Distributor Management]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Distributors retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ */
+router.get('/distributors', protect, authorize('admin', 'superadmin'), getAllDistributors);
 
 module.exports = router;

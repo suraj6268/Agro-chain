@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { schemesAPI } from '../services/api';
+import { DetailShimmer } from '../components/Shimmer';
 import './SchemeDetailPage.css';
 
 const SchemeDetailPage = () => {
@@ -27,7 +28,7 @@ const SchemeDetailPage = () => {
     if (loading) {
         return (
             <div className="scheme-detail-page">
-                <div className="loading-container">Loading...</div>
+                <DetailShimmer />
             </div>
         );
     }

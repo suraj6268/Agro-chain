@@ -1,37 +1,37 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { ShimmerTable } from '../../components/Shimmer';
 import { authAPI } from '../../services/api';
-import './SuperAdmin.css';
+import './SuperAdmin.css'; // Reusing SuperAdmin styles to ensure identical aesthetic
 
-const SuperAdmin = () => {
-    const { admin, logout, isSuperAdmin } = useAuth();
+const DistributorManagement = () => {
+    const { admin, isSuperAdmin } = useAuth();
     const navigate = useNavigate();
-    const [admins, setAdmins] = useState([]);
+    const [distributors, setDistributors] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [formData, setFormData] = useState({
         username: '',
         email: '',
         password: '',
-        role: 'admin'
+        city: ''
     });
     const [error, setError] = useState('');
 
     useEffect(() => {
-        if (!isSuperAdmin()) {
+        if (!admin || !['admin', 'superadmin'].includes(admin.role)) {
             navigate('/admin/dashboard');
             return;
         }
-        loadAdmins();
-    }, []);
+        loadDistributors();
+    }, [admin]);
 
-    const loadAdmins = async () => {
+    const loadDistributors = async () => {
         setLoading(true);
-        const res = await authAPI.getAllAdmins();
+        const res = await authAPI.getAllDistributors();
         if (res.success) {
-            setAdmins(res.data || []);
+            setDistributors(res.data || []);
         }
         setLoading(false);
     };
@@ -40,52 +40,45 @@ const SuperAdmin = () => {
         e.preventDefault();
         setError('');
 
-        const res = await authAPI.registerAdmin(formData);
+        const res = await authAPI.registerDistributor(formData);
         if (res.success) {
             setShowModal(false);
-            setFormData({ username: '', email: '', password: '', role: 'admin' });
-            loadAdmins();
+            setFormData({ username: '', email: '', password: '', city: '' });
+            loadDistributors();
         } else {
-            setError(res.message || 'Failed to create admin');
+            setError(res.message || 'Failed to create distributor');
         }
     };
 
     const handleToggle = async (id) => {
-        const res = await authAPI.toggleAdmin(id);
+        const res = await authAPI.toggleAdmin(id); // Reusng the same toggle endpoint
         if (res.success) {
-            loadAdmins();
+            loadDistributors();
         } else {
             alert(res.message || 'Operation failed');
         }
     };
 
     const handleDelete = async (id) => {
-        if (!confirm('Are you sure you want to delete this admin?')) return;
-        const res = await authAPI.deleteAdmin(id);
+        if (!confirm('Are you sure you want to delete this distributor?')) return;
+        const res = await authAPI.deleteAdmin(id); // Reusing the same delete endpoint
         if (res.success) {
-            loadAdmins();
+            loadDistributors();
         } else {
             alert(res.message || 'Delete failed');
         }
     };
 
-    const handleLogout = () => {
-        logout();
-        navigate('/admin/login');
-    };
-
     return (
-        <div className="super-admin">
-
-
+        <div className="super-admin distributor-management">
             <main className="admin-content">
                 <div className="content-header">
                     <div>
-                        <h1>Admin Management</h1>
-                        <p>Manage admin accounts (Super Admin only)</p>
+                        <h1>Distributor Management</h1>
+                        <p>Manage distributor accounts and assign operational cities.</p>
                     </div>
                     <button className="add-btn" onClick={() => setShowModal(true)}>
-                        + Add New Admin
+                        + Add New Distributor
                     </button>
                 </div>
 
@@ -93,44 +86,44 @@ const SuperAdmin = () => {
                     <ShimmerTable rows={6} />
                 ) : (
                     <div className="admins-grid">
-                        {admins.map(a => (
-                            <div key={a._id} className={`admin-card ${!a.isActive ? 'inactive' : ''}`}>
+                        {distributors.map(d => (
+                            <div key={d._id} className={`admin-card ${!d.isActive ? 'inactive' : ''}`}>
                                 <div className="admin-avatar">
-                                    {a.username?.charAt(0).toUpperCase()}
+                                    {d.username?.charAt(0).toUpperCase()}
                                 </div>
                                 <div className="admin-info">
-                                    <h3>{a.username}</h3>
-                                    <p>{a.email}</p>
+                                    <h3>{d.username}</h3>
+                                    <p>{d.email}</p>
                                     <div className="admin-meta">
-                                        <span className={`role-badge ${a.role}`}>{a.role}</span>
-                                        <span className={`status-badge ${a.isActive ? 'active' : 'inactive'}`}>
-                                            {a.isActive ? 'Active' : 'Inactive'}
+                                        <span className={`role-badge distributor`}>Distributor in {d.city}</span>
+                                        <span className={`status-badge ${d.isActive ? 'active' : 'inactive'}`}>
+                                            {d.isActive ? 'Active' : 'Inactive'}
                                         </span>
                                     </div>
-                                    {a.lastLogin && (
+                                    {d.lastLogin && (
                                         <span className="last-login">
-                                            Last login: {new Date(a.lastLogin).toLocaleString()}
+                                            Last login: {new Date(d.lastLogin).toLocaleString()}
                                         </span>
                                     )}
                                 </div>
-                                {a._id !== admin?.id && (
-                                    <div className="admin-actions">
-                                        <button
-                                            onClick={() => handleToggle(a._id)}
-                                            className={`toggle-btn ${a.isActive ? 'deactivate' : 'activate'}`}
-                                        >
-                                            {a.isActive ? 'Deactivate' : 'Activate'}
-                                        </button>
-                                        <button onClick={() => handleDelete(a._id)} className="delete-btn">
-                                            Delete
-                                        </button>
-                                    </div>
-                                )}
-                                {a._id === admin?.id && (
-                                    <div className="you-badge">You</div>
-                                )}
+                                <div className="admin-actions">
+                                    <button
+                                        onClick={() => handleToggle(d._id)}
+                                        className={`toggle-btn ${d.isActive ? 'deactivate' : 'activate'}`}
+                                    >
+                                        {d.isActive ? 'Deactivate' : 'Activate'}
+                                    </button>
+                                    <button onClick={() => handleDelete(d._id)} className="delete-btn">
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
                         ))}
+                        {distributors.length === 0 && (
+                            <p style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: '#666' }}>
+                                No distributors found. Click the button above to add one.
+                            </p>
+                        )}
                     </div>
                 )}
             </main>
@@ -139,7 +132,7 @@ const SuperAdmin = () => {
                 <div className="modal-overlay" onClick={() => setShowModal(false)}>
                     <div className="modal" onClick={(e) => e.stopPropagation()}>
                         <div className="modal-header">
-                            <h2>Add New Admin</h2>
+                            <h2>Add New Distributor</h2>
                             <button className="close-btn" onClick={() => setShowModal(false)}>×</button>
                         </div>
                         <form onSubmit={handleSubmit} className="admin-form">
@@ -178,13 +171,24 @@ const SuperAdmin = () => {
                             </div>
 
                             <div className="form-group">
-                                <label>Role</label>
+                                <label>Assigned City (MP Only) *</label>
                                 <select
-                                    value={formData.role}
-                                    onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                                    value={formData.city}
+                                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                                    required
                                 >
-                                    <option value="admin">Admin</option>
-                                    <option value="superadmin">Super Admin</option>
+                                    <option value="" disabled>Select a city</option>
+                                    {[
+                                        "Ashoknagar", "Balaghat", "Barwani", "Betul", "Bhind", "Bhopal", "Burhanpur",
+                                        "Chhatarpur", "Chhindwara", "Damoh", "Datia", "Dewas", "Dhar", "Guna",
+                                        "Gwalior", "Harda", "Hoshangabad", "Indore", "Itarsi", "Jabalpur", "Jhabua",
+                                        "Katni", "Khandwa", "Khargone", "Mandsaur", "Morena", "Murwara", "Neemuch",
+                                        "Panna", "Pithampur", "Ratlam", "Rewa", "Sagar", "Satna", "Sehore", "Seoni",
+                                        "Shahdol", "Shajapur", "Sheopur", "Shivpuri", "Sidhi", "Singrauli", "Tikamgarh",
+                                        "Ujjain", "Vidisha"
+                                    ].map(city => (
+                                        <option key={city} value={city}>{city}</option>
+                                    ))}
                                 </select>
                             </div>
 
@@ -193,7 +197,7 @@ const SuperAdmin = () => {
                                     Cancel
                                 </button>
                                 <button type="submit" className="submit-btn">
-                                    Create Admin
+                                    Create Distributor
                                 </button>
                             </div>
                         </form>
@@ -204,4 +208,4 @@ const SuperAdmin = () => {
     );
 };
 
-export default SuperAdmin;
+export default DistributorManagement;

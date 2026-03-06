@@ -53,6 +53,22 @@ export const authAPI = {
         return res.json();
     },
 
+    registerDistributor: async (data) => {
+        const res = await fetch(`${API_BASE}/api/admin/distributor/register`, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify(data)
+        });
+        return res.json();
+    },
+
+    getAllDistributors: async () => {
+        const res = await fetch(`${API_BASE}/api/admin/distributors`, {
+            headers: getAuthHeaders()
+        });
+        return res.json();
+    },
+
     toggleAdmin: async (id) => {
         const res = await fetch(`${API_BASE}/api/admin/${id}/toggle`, {
             method: 'PATCH',

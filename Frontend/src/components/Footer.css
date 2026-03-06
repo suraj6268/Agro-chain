@@ -1,0 +1,106 @@
+/* Footer.css */
+.footer-container {
+    background: #1b5e20;
+    /* Deep Green Foundation */
+    color: #ffffff;
+    padding: 60px 20px 20px;
+    margin-top: auto;
+    /* Pushes footer to bottom if flex container */
+    overflow: hidden;
+    position: relative;
+    font-family: 'Poppins', sans-serif;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+/* Brand Section */
+.footer-logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #a5d6a7;
+    /* Light Green Accent */
+}
+
+.footer-desc {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Links Section */
+.footer-section h4 {
+    font-size: 1.2rem;
+    margin-bottom: 1.2rem;
+    color: #ffffff;
+    border-bottom: 2px solid #43a047;
+    display: inline-block;
+    padding-bottom: 0.3rem;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section li {
+    margin-bottom: 0.8rem;
+}
+
+.footer-section a {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.footer-section a:hover {
+    color: #a5d6a7;
+    padding-left: 5px;
+    /* Slide effect */
+}
+
+/* Contact Section */
+.footer-section.contact p {
+    margin-bottom: 0.8rem;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Bottom Bar */
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 20px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .footer-container {
+        padding: 40px 20px 20px;
+    }
+
+    .footer-content {
+        gap: 30px;
+        text-align: center;
+    }
+
+    .footer-section h4 {
+        border-bottom: none;
+        /* Simplify on mobile */
+        text-decoration: underline;
+        text-decoration-color: #43a047;
+    }
+}

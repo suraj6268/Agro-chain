@@ -99,7 +99,7 @@ const loginAdmin = async (req, res) => {
         // Generate token
         const token = generateToken(admin._id);
 
-        console.log("admin data" , admin , token)
+        console.log("admin data", admin, token)
 
         res.status(200).json({
             success: true,
@@ -109,6 +109,7 @@ const loginAdmin = async (req, res) => {
                 username: admin.username,
                 email: admin.email,
                 role: admin.role,
+                city: admin.city,
                 token
             }
         });
@@ -136,6 +137,7 @@ const getAdminProfile = async (req, res) => {
                 username: admin.username,
                 email: admin.email,
                 role: admin.role,
+                city: admin.city,
                 isActive: admin.isActive,
                 lastLogin: admin.lastLogin,
                 createdAt: admin.createdAt
@@ -198,7 +200,7 @@ const updatePassword = async (req, res) => {
 // @access  Private/SuperAdmin
 const getAllAdmins = async (req, res) => {
     try {
-        const admins = await Admin.find().select('-password');
+        const admins = await Admin.find({ role: { $ne: 'distributor' } }).select('-password');
 
         res.status(200).json({
             success: true,
@@ -226,6 +228,14 @@ const toggleAdminStatus = async (req, res) => {
             return res.status(404).json({
                 success: false,
                 message: 'Admin not found'
+            });
+        }
+
+        // Only superadmins can toggle other admins/superadmins.
+        if (req.admin.role === 'admin' && admin.role !== 'distributor') {
+            return res.status(403).json({
+                success: false,
+                message: 'Admins are only authorized to manage distributor accounts'
             });
         }
 
@@ -266,6 +276,14 @@ const deleteAdmin = async (req, res) => {
             return res.status(404).json({
                 success: false,
                 message: 'Admin not found'
+            });
+        }
+
+        // Only superadmins can delete other admins/superadmins.
+        if (req.admin.role === 'admin' && admin.role !== 'distributor') {
+            return res.status(403).json({
+                success: false,
+                message: 'Admins are only authorized to manage distributor accounts'
             });
         }
 
@@ -347,6 +365,80 @@ const setupSuperAdmin = async (req, res) => {
     }
 };
 
+// @desc    Register new distributor
+// @route   POST /api/admin/distributor/register
+// @access  Private/Admin or SuperAdmin
+const registerDistributor = async (req, res) => {
+    try {
+        const { username, email, password, city } = req.body;
+
+        if (!city) {
+            return res.status(400).json({
+                success: false,
+                message: 'City is required for a distributor'
+            });
+        }
+
+        // Check if user already exists
+        const existingUser = await Admin.findOne({ $or: [{ email }, { username }] });
+        if (existingUser) {
+            return res.status(400).json({
+                success: false,
+                message: 'User with this email or username already exists'
+            });
+        }
+
+        const distributor = await Admin.create({
+            username,
+            email,
+            password,
+            role: 'distributor',
+            city
+        });
+
+        res.status(201).json({
+            success: true,
+            message: 'Distributor registered successfully',
+            data: {
+                id: distributor._id,
+                username: distributor.username,
+                email: distributor.email,
+                role: distributor.role,
+                city: distributor.city
+            }
+        });
+    } catch (error) {
+        console.error('Error registering distributor:', error);
+        res.status(400).json({
+            success: false,
+            message: 'Error registering distributor',
+            error: error.message
+        });
+    }
+};
+
+// @desc    Get all distributors
+// @route   GET /api/admin/distributors
+// @access  Private/Admin or SuperAdmin
+const getAllDistributors = async (req, res) => {
+    try {
+        const distributors = await Admin.find({ role: 'distributor' }).select('-password');
+
+        res.status(200).json({
+            success: true,
+            count: distributors.length,
+            data: distributors
+        });
+    } catch (error) {
+        console.error('Error fetching distributors:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error fetching distributors',
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
     registerAdmin,
     loginAdmin,
@@ -355,5 +447,7 @@ module.exports = {
     getAllAdmins,
     toggleAdminStatus,
     deleteAdmin,
-    setupSuperAdmin
+    setupSuperAdmin,
+    registerDistributor,
+    getAllDistributors
 };

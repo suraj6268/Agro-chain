@@ -1,6 +1,8 @@
 .schemes-page {
     min-height: 100vh;
-    background: linear-gradient(180deg, #f0f7f0 0%, #e8f5e9 50%, #c8e6c9 100%);
+    /* Matched to Header Background - Light Green */
+    background-color: #c8e6c9;
+    /* Equivalent to rgba(200, 230, 201, 1) */
 }
 
 /* Hero Section */

@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { schemesAPI } from '../../services/api';
+import { ShimmerTable } from '../../components/Shimmer';
+import './AdminDashboard.css';
 import './SchemesManagement.css';
 
 const CATEGORIES = [
@@ -118,26 +120,7 @@ const SchemesManagement = () => {
 
     return (
         <div className="schemes-management">
-            <nav className="admin-nav">
-                <div className="nav-brand">
-                    <span className="brand-icon">🌾</span>
-                    <span className="brand-text">Agro-chain Admin</span>
-                </div>
-                <div className="nav-links">
-                    <Link to="/admin/dashboard" className="nav-link">Dashboard</Link>
-                    <Link to="/admin/schemes" className="nav-link active">Schemes</Link>
-                    {isSuperAdmin() && (
-                        <Link to="/admin/users" className="nav-link">Admins</Link>
-                    )}
-                </div>
-                <div className="nav-user">
-                    <span className="user-info">
-                        <span className="user-name">{admin?.username}</span>
-                        <span className={`user-role ${admin?.role}`}>{admin?.role}</span>
-                    </span>
-                    <button onClick={handleLogout} className="logout-btn">Logout</button>
-                </div>
-            </nav>
+
 
             <main className="admin-content">
                 <div className="content-header">
@@ -170,7 +153,7 @@ const SchemesManagement = () => {
                 </div>
 
                 {loading ? (
-                    <div className="loading">Loading schemes...</div>
+                    <ShimmerTable rows={8} />
                 ) : (
                     <div className="schemes-table">
                         <table>
@@ -200,11 +183,27 @@ const SchemesManagement = () => {
                                         </td>
                                         <td>{scheme.viewCount || 0}</td>
                                         <td className="actions-cell">
-                                            <button onClick={() => handleToggle(scheme._id)} className="action-btn toggle">
-                                                {scheme.isActive ? '⏸️' : '▶️'}
+                                            <button
+                                                onClick={() => handleEdit(scheme)}
+                                                className="action-btn edit"
+                                                title="Edit Scheme"
+                                            >
+                                                Edit
                                             </button>
-                                            <button onClick={() => handleEdit(scheme)} className="action-btn edit">✏️</button>
-                                            <button onClick={() => handleDelete(scheme._id)} className="action-btn delete">🗑️</button>
+                                            <button
+                                                onClick={() => handleToggle(scheme._id)}
+                                                className="action-btn toggle"
+                                                title={scheme.isActive ? 'Deactivate' : 'Activate'}
+                                            >
+                                                {scheme.isActive ? 'Deactivate' : 'Activate'}
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(scheme._id)}
+                                                className="action-btn delete"
+                                                title="Delete Scheme"
+                                            >
+                                                Delete
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}

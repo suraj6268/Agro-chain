@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import SchemeCard from '../components/SchemeCard';
+import { ShimmerGrid } from '../components/Shimmer';
 import { schemesAPI } from '../services/api';
 import './SchemesPage.css';
 
@@ -10,6 +11,19 @@ const SchemesPage = () => {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
+    const location = useLocation();
+
+    // Handle Scroll to Top or Hash Section
+    useEffect(() => {
+        if (location.hash) {
+            const element = document.getElementById(location.hash.substring(1));
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        } else {
+            window.scrollTo(0, 0);
+        }
+    }, [location]);
 
     useEffect(() => {
         loadSchemes();
@@ -24,8 +38,12 @@ const SchemesPage = () => {
             }
         } catch (err) {
             console.error('Failed to load schemes:', err);
+        } finally {
+            // Ensure shimmer effect is visible for 0.5s
+            setTimeout(() => {
+                setLoading(false);
+            }, 500);
         }
-        setLoading(false);
     };
 
     const loadCategories = async () => {
@@ -50,7 +68,7 @@ const SchemesPage = () => {
         <div className="schemes-page">
             <div className="schemes-hero">
                 <div className="hero-content">
-                    <span className="hero-badge">🌾 Agro-chain</span>
+
                     <h1 className="hero-title">Government Schemes for Farmers</h1>
                     <p className="hero-subtitle">
                         Discover and access welfare schemes designed to support Indian farmers
@@ -72,10 +90,10 @@ const SchemesPage = () => {
                 </div>
             </div>
 
-            <div className="schemes-container">
+            <div className="schemes-container" id="schemes-section">
                 <div className="filters-section">
                     <div className="search-box">
-                        <span className="search-icon">🔍</span>
+                        <span className="search-icon"></span>
                         <input
                             type="text"
                             placeholder="Search schemes by name or description..."
@@ -103,7 +121,7 @@ const SchemesPage = () => {
                 </div>
 
                 {loading ? (
-                    <div className="loading-message">Loading schemes...</div>
+                    <ShimmerGrid count={6} />
                 ) : (
                     <div className="schemes-grid">
                         {filteredSchemes.map(scheme => (

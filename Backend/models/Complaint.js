@@ -6,6 +6,11 @@ const complaintSchema = new mongoose.Schema({
         required: [true, 'Farmer name is required'],
         trim: true
     },
+    farmerId: {
+        type: String,
+        required: [true, 'Farmer ID is required'],
+        trim: true
+    },
     mobile: {
         type: String,
         required: [true, 'Mobile number is required'],
