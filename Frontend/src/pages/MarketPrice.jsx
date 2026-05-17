@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Search, MapPin, TrendingUp, Filter, Award } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { ShimmerGrid } from '../components/Shimmer';
 import './MarketPrice.css';
 
@@ -7,6 +8,7 @@ const API_KEY = '579b464db66ec23bdd00000166a5f0b0a5a04ce0666fd3f49b1518ec';
 const API_URL = `https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?api-key=${API_KEY}&format=json&limit=1000`;
 
 const MarketPrice = () => {
+    const { t } = useTranslation();
     const [data, setData] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -151,9 +153,9 @@ const MarketPrice = () => {
         return (
             <div className="market-price-container">
                 <div className="market-price-header">
-                    <h2>Market Price Comparison</h2>
+                    <h2>{t('market.title')}</h2>
                     <div className="header-subtitle-wrapper">
-                        <p>Loading real-time agricultural commodity prices...</p>
+                        <p>{t('market.loading')}</p>
                     </div>
                 </div>
                 <ShimmerGrid count={8} />
@@ -164,8 +166,8 @@ const MarketPrice = () => {
     if (error) {
         return (
             <div className="market-price-container error-container">
-                <p>Error: {error}</p>
-                <button onClick={fetchData} className="retry-btn">Retry</button>
+                <p>{t('market.error')}: {error}</p>
+                <button onClick={fetchData} className="retry-btn">{t('market.retry')}</button>
             </div>
         );
     }
@@ -174,9 +176,9 @@ const MarketPrice = () => {
         <div className="market-price-page">
             <div className="market-price-hero">
                 <div className="market-price-header">
-                    <h2>Market Price Comparison</h2>
+                    <h2>{t('market.title')}</h2>
                     <div className="header-subtitle-wrapper">
-                        <p>Real-time agricultural commodity prices across India</p>
+                        <p>{t('market.subtitle')}</p>
                     </div>
                 </div>
 
@@ -185,7 +187,7 @@ const MarketPrice = () => {
                         <Search className="search-icon" size={20} />
                         <input
                             type="text"
-                            placeholder="Search commodities or market"
+                            placeholder={t('market.searchPlaceholder')}
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="search-input"
@@ -195,7 +197,7 @@ const MarketPrice = () => {
                     <div className="dropdowns-wrapper">
                         <div className="select-wrapper">
                             <select id="commodity" name="commodity" value={filters.commodity} onChange={handleFilterChange}>
-                                <option value="">All Commodities</option>
+                                <option value="">{t('market.allCommodities')}</option>
                                 {commodities.map(commodity => (
                                     <option key={commodity} value={commodity}>{commodity}</option>
                                 ))}
@@ -204,7 +206,7 @@ const MarketPrice = () => {
 
                         <div className="select-wrapper">
                             <select id="state" name="state" value={filters.state} onChange={handleFilterChange}>
-                                <option value="">All States</option>
+                                <option value="">{t('market.allStates')}</option>
                                 {states.map(state => (
                                     <option key={state} value={state}>{state}</option>
                                 ))}
@@ -213,7 +215,7 @@ const MarketPrice = () => {
 
                         <div className="select-wrapper">
                             <select id="district" name="district" value={filters.district} onChange={handleFilterChange} disabled={!filters.state && districts.length > 100}>
-                                <option value="">All Districts</option>
+                                <option value="">{t('market.allDistricts')}</option>
                                 {districts.map(district => (
                                     <option key={district} value={district}>{district}</option>
                                 ))}
@@ -235,11 +237,11 @@ const MarketPrice = () => {
                                                 value={filters.priceRange}
                                                 onChange={(e) => setFilters(prev => ({ ...prev, priceRange: e.target.value }))}
                                             >
-                                                <option value="">All Prices</option>
-                                                <option value="below-2000">Below ₹2,000</option>
-                                                <option value="2000-5000">₹2,000 - ₹5,000</option>
-                                                <option value="5000-10000">₹5,000 - ₹10,000</option>
-                                                <option value="above-10000">Above ₹10,000</option>
+                                                <option value="">{t('market.allPrices')}</option>
+                                                <option value="below-2000">{t('market.below2k')}</option>
+                                                <option value="2000-5000">{t('market.range2k5k')}</option>
+                                                <option value="5000-10000">{t('market.range5k10k')}</option>
+                                                <option value="above-10000">{t('market.above10k')}</option>
                                             </select>
                                         </div>
                                     )}
@@ -258,20 +260,20 @@ const MarketPrice = () => {
                             <Award size={28} className="insight-icon" />
                         </div>
                         <div className="insight-content">
-                            <h4 className="insight-title">Highest Market Price for {bestPriceInsight.commodity}</h4>
+                            <h4 className="insight-title">{t('market.highestPrice')} {bestPriceInsight.commodity}</h4>
                             <p className="insight-location">
-                                Found in <strong>{bestPriceInsight.market}</strong> ({bestPriceInsight.district}, {bestPriceInsight.state})
+                                {t('market.foundIn')} <strong>{bestPriceInsight.market}</strong> ({bestPriceInsight.district}, {bestPriceInsight.state})
                             </p>
                         </div>
                         <div className="insight-value">
                             <span className="insight-price">₹{bestPriceInsight.max_price}</span>
-                            <span className="insight-label">Max Price</span>
+                            <span className="insight-label">{t('market.maxPrice')}</span>
                         </div>
                     </div>
                 )}
 
                 {filteredData.length === 0 ? (
-                    <div className="no-data">No records found for the selected filters.</div>
+                    <div className="no-data">{t('market.noRecords')}</div>
                 ) : (
                     <div className="cards-grid">
                         {filteredData.map((item, index) => (
@@ -282,8 +284,8 @@ const MarketPrice = () => {
                                 </div>
 
                                 <div className="card-subtext">
-                                    <p>Variety: {item.variety}</p>
-                                    <p>Grade: {item.grade}</p>
+                                    <p>{t('market.variety')}: {item.variety}</p>
+                                    <p>{t('market.grade')}: {item.grade}</p>
                                 </div>
 
                                 <div className="location-info">
@@ -293,23 +295,24 @@ const MarketPrice = () => {
 
                                 <div className="price-range">
                                     <div className="price-box">
-                                        <span className="price-label">MIN PRICE</span>
+                                        <span className="price-label">{t('market.minPriceLabel')}</span>
                                         <span className="price-value min-val">₹{item.min_price}</span>
                                     </div>
                                     <div className="price-box">
-                                        <span className="price-label">MAX PRICE</span>
+                                        <span className="price-label">{t('market.maxPriceLabel')}</span>
                                         <span className="price-value max-val">₹{item.max_price}</span>
                                     </div>
                                 </div>
 
                                 <div className="modal-price-box">
                                     <TrendingUp size={18} className="trend-icon" />
-                                    <span className="modal-label">Modal Price</span>
+                                    <span className="modal-label">{t('market.modalPrice')}</span>
                                     <span className="modal-value">₹{item.modal_price}</span>
                                 </div>
 
                                 <div className="card-footer">
-                                    <span>Last Update: {item.arrival_date}</span>
+                                    <span className="source-badge">{t('market.source')}</span>
+                                    <span>{t('market.lastUpdate')}: {item.arrival_date}</span>
                                 </div>
                             </div>
                         ))}
@@ -317,7 +320,7 @@ const MarketPrice = () => {
                 )}
 
                 <div className="summary-footer">
-                    Showing {filteredData.length} records
+                    {t('market.showingRecords')} {filteredData.length} {t('market.records')}
                 </div>
             </div>
         </div>

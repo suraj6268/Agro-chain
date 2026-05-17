@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Bell, Info, AlertTriangle, CheckCircle, X, ShieldAlert, TrendingUp, Calendar } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { NotificationShimmerList } from '../components/Shimmer';
 import './Notifications.css';
 
 const Notifications = () => {
+    const { t } = useTranslation();
     const [notifications, setNotifications] = useState([]);
     const [activeFilter, setActiveFilter] = useState('all');
     const [isLoading, setIsLoading] = useState(true);
@@ -14,14 +16,14 @@ const Notifications = () => {
         const now = new Date();
         const diffInSeconds = Math.floor((now - date) / 1000);
 
-        if (diffInSeconds < 60) return `${diffInSeconds}s ago`;
+        if (diffInSeconds < 60) return `${diffInSeconds}${t('notifications.s')} ${t('notifications.ago')}`;
         const diffInMinutes = Math.floor(diffInSeconds / 60);
-        if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+        if (diffInMinutes < 60) return `${diffInMinutes}${t('notifications.m')} ${t('notifications.ago')}`;
         const diffInHours = Math.floor(diffInMinutes / 60);
-        if (diffInHours < 24) return `${diffInHours}h ago`;
+        if (diffInHours < 24) return `${diffInHours}${t('notifications.h')} ${t('notifications.ago')}`;
         const diffInDays = Math.floor(diffInHours / 24);
-        if (diffInDays === 1) return `Yesterday`;
-        return `${diffInDays}d ago`;
+        if (diffInDays === 1) return t('notifications.yesterday');
+        return `${diffInDays}${t('notifications.d')} ${t('notifications.ago')}`;
     };
 
     // Fetch data from API on mount
@@ -86,10 +88,10 @@ const Notifications = () => {
         <div className="notifications-page">
             <div className="notifications-hero">
                 <div className="notifications-header">
-                    <h2>Updates & Alerts</h2>
+                    <h2>{t('notifications.title')}</h2>
                     <div className="header-subtitle-wrapper">
                         <Bell size={20} className="bell-icon animate-ring" />
-                        <p>Stay informed with the latest agricultural updates</p>
+                        <p>{t('notifications.subtitle')}</p>
                     </div>
                 </div>
 
@@ -98,25 +100,25 @@ const Notifications = () => {
                         className={`chip ${activeFilter === 'all' ? 'active' : ''}`}
                         onClick={() => setActiveFilter('all')}
                     >
-                        All
+                        {t('notifications.all')}
                     </button>
                     <button
                         className={`chip ${activeFilter === 'info' ? 'active alert-info' : ''}`}
                         onClick={() => setActiveFilter('info')}
                     >
-                        Information
+                        {t('notifications.info')}
                     </button>
                     <button
                         className={`chip ${activeFilter === 'success' ? 'active alert-success' : ''}`}
                         onClick={() => setActiveFilter('success')}
                     >
-                        Market Updates
+                        {t('notifications.success')}
                     </button>
                     <button
                         className={`chip ${activeFilter === 'error' ? 'active alert-error' : ''}`}
                         onClick={() => setActiveFilter('error')}
                     >
-                        System Events
+                        {t('notifications.error')}
                     </button>
                 </div>
             </div>
@@ -129,8 +131,8 @@ const Notifications = () => {
                         <div className="empty-icon-wrapper">
                             <CheckCircle size={48} />
                         </div>
-                        <h3>You're all caught up!</h3>
-                        <p>There are no new notifications to display right now.</p>
+                        <h3>{t('notifications.caughtUp')}</h3>
+                        <p>{t('notifications.noNotifs')}</p>
                     </div>
                 ) : (
                     <div className="notifications-list">

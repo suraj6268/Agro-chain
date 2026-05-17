@@ -19,14 +19,6 @@ const SuperAdmin = () => {
     });
     const [error, setError] = useState('');
 
-    useEffect(() => {
-        if (!isSuperAdmin()) {
-            navigate('/admin/dashboard');
-            return;
-        }
-        loadAdmins();
-    }, []);
-
     const loadAdmins = async () => {
         setLoading(true);
         const res = await authAPI.getAllAdmins();
@@ -35,6 +27,15 @@ const SuperAdmin = () => {
         }
         setLoading(false);
     };
+
+    useEffect(() => {
+        if (!isSuperAdmin()) {
+            navigate('/admin/dashboard');
+            return;
+        }
+        loadAdmins();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -69,10 +70,6 @@ const SuperAdmin = () => {
         }
     };
 
-    const handleLogout = () => {
-        logout();
-        navigate('/admin/login');
-    };
 
     return (
         <div className="super-admin">

@@ -1,6 +1,8 @@
+import { useTranslation } from 'react-i18next';
 import './SchemeCard.css';
 
 const SchemeCard = ({ scheme }) => {
+    const { t } = useTranslation();
     const schemeId = scheme._id || scheme.id;
 
     return (
@@ -10,7 +12,7 @@ const SchemeCard = ({ scheme }) => {
                     {scheme.category}
                 </span>
                 {scheme.isActive === false && (
-                    <span className="inactive-badge">Inactive</span>
+                    <span className="inactive-badge">{t('schemes.inactive')}</span>
                 )}
             </div>
 
@@ -31,7 +33,7 @@ const SchemeCard = ({ scheme }) => {
                     rel="noopener noreferrer"
                     className="btn-details"
                 >
-                    See More Details
+                    {t('schemes.seeMore')}
                     <span className="arrow">→</span>
                 </a>
 
@@ -41,7 +43,7 @@ const SchemeCard = ({ scheme }) => {
                     rel="noopener noreferrer"
                     className="btn-official"
                 >
-                    Official Website
+                    {t('schemes.officialWeb')}
                     <span className="external-icon">↗</span>
                 </a>
             </div>

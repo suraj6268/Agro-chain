@@ -117,6 +117,35 @@
 }
 
 /* Mobile Menu Icon */
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.lang-toggle-btn {
+    display: flex;
+    align-items: center;
+    background: #2e7d32;
+    color: #ffffff;
+    border: 2px solid #1b5e20;
+    border-radius: 30px;
+    padding: 0.5rem 1rem;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.lang-toggle-btn:hover {
+    background: #1b5e20;
+    border-color: #004d40;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(46, 125, 50, 0.25);
+}
+
 .mobile-menu-icon {
     display: none;
     cursor: pointer;
@@ -195,5 +224,44 @@
         box-shadow: 0 4px 10px rgba(46, 125, 50, 0.1);
         border-radius: 20px;
         /* Make radius slightly smaller to match size */
+    }
+}
+
+/* Notification Badge Styles */
+.nav-text-with-icon {
+    display: flex;
+    align-items: center;
+    position: relative;
+    gap: 4px;
+}
+
+.notification-badge {
+    background-color: #ef4444;
+    /* bright red */
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.1rem 0.4rem;
+    border-radius: 9999px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 0 2px #2e7d32;
+    /* white border using the navbar link bg */
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
     }
 }

@@ -6,7 +6,7 @@ import { authAPI } from '../../services/api';
 import './SuperAdmin.css'; // Reusing SuperAdmin styles to ensure identical aesthetic
 
 const DistributorManagement = () => {
-    const { admin, isSuperAdmin } = useAuth();
+    const { admin } = useAuth();
     const navigate = useNavigate();
     const [distributors, setDistributors] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -19,14 +19,6 @@ const DistributorManagement = () => {
     });
     const [error, setError] = useState('');
 
-    useEffect(() => {
-        if (!admin || !['admin', 'superadmin'].includes(admin.role)) {
-            navigate('/admin/dashboard');
-            return;
-        }
-        loadDistributors();
-    }, [admin]);
-
     const loadDistributors = async () => {
         setLoading(true);
         const res = await authAPI.getAllDistributors();
@@ -35,6 +27,15 @@ const DistributorManagement = () => {
         }
         setLoading(false);
     };
+
+    useEffect(() => {
+        if (!admin) {
+            navigate('/admin/login');
+            return;
+        }
+        loadDistributors();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [admin]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import SchemeCard from '../components/SchemeCard';
 import { ShimmerGrid } from '../components/Shimmer';
 import { schemesAPI } from '../services/api';
 import './SchemesPage.css';
 
 const SchemesPage = () => {
+    const { t } = useTranslation();
     const [schemes, setSchemes] = useState([]);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -52,7 +54,7 @@ const SchemesPage = () => {
             if (res.success) {
                 setCategories(['All', ...res.data.map(c => c.name)]);
             }
-        } catch (err) {
+        } catch {
             setCategories(['All']);
         }
     };
@@ -69,22 +71,22 @@ const SchemesPage = () => {
             <div className="schemes-hero">
                 <div className="hero-content">
 
-                    <h1 className="hero-title">Government Schemes for Farmers</h1>
+                    <h1 className="hero-title">{t('schemes.heroTitle')}</h1>
                     <p className="hero-subtitle">
-                        Discover and access welfare schemes designed to support Indian farmers
+                        {t('schemes.heroSubtitle')}
                     </p>
                     <div className="schemes-stats">
                         <div className="stat-item">
                             <span className="stat-number">{schemes.length}</span>
-                            <span className="stat-label">Total Schemes</span>
+                            <span className="stat-label">{t('schemes.totalSchemes')}</span>
                         </div>
                         <div className="stat-item">
                             <span className="stat-number">{categories.length - 1}</span>
-                            <span className="stat-label">Categories</span>
+                            <span className="stat-label">{t('schemes.categories')}</span>
                         </div>
                         <div className="stat-item">
                             <span className="stat-number">100%</span>
-                            <span className="stat-label">Free Access</span>
+                            <span className="stat-label">{t('schemes.freeAccess')}</span>
                         </div>
                     </div>
                 </div>
@@ -96,7 +98,7 @@ const SchemesPage = () => {
                         <span className="search-icon"></span>
                         <input
                             type="text"
-                            placeholder="Search schemes by name or description..."
+                            placeholder={t('schemes.searchPlaceholder')}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
@@ -116,8 +118,8 @@ const SchemesPage = () => {
                 </div>
 
                 <div className="results-info">
-                    <span>Showing {filteredSchemes.length} of {schemes.length} schemes</span>
-                    <Link to="/admin/login" className="admin-link">Admin Login →</Link>
+                    <span>{t('schemes.showing')} {filteredSchemes.length} {t('schemes.of')} {schemes.length} {t('schemes.schemesWord')}</span>
+                    <Link to="/admin/login" className="admin-link">{t('schemes.adminLogin')}</Link>
                 </div>
 
                 {loading ? (
@@ -133,8 +135,8 @@ const SchemesPage = () => {
                 {!loading && filteredSchemes.length === 0 && (
                     <div className="no-results">
                         <span className="no-results-icon">🔎</span>
-                        <h3>No schemes found</h3>
-                        <p>Try adjusting your search or filter criteria</p>
+                        <h3>{t('schemes.noSchemes')}</h3>
+                        <p>{t('schemes.tryAdjusting')}</p>
                     </div>
                 )}
             </div>

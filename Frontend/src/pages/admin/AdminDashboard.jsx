@@ -13,11 +13,6 @@ const AdminDashboard = () => {
     const [complaints, setComplaints] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        loadStats();
-        fetchComplaints();
-    }, []);
-
     const loadStats = async () => {
         try {
             const res = await schemesAPI.getStats();
@@ -43,6 +38,11 @@ const AdminDashboard = () => {
         }
     };
 
+    useEffect(() => {
+        loadStats();
+        fetchComplaints();
+    }, []);
+
     const handleResolveComplaint = async (id) => {
         const note = prompt("Enter resolution details (optional):");
         if (note === null) return; // Cancelled
@@ -64,15 +64,11 @@ const AdminDashboard = () => {
             } else {
                 alert(data.message || 'Failed to resolve complaint');
             }
-        } catch (err) {
+        } catch {
             alert('Server error resolving complaint');
         }
     };
 
-    const handleLogout = () => {
-        logout();
-        navigate('/admin/login');
-    };
 
     return (
         <div className="admin-dashboard">
@@ -261,7 +257,7 @@ const AdminDashboard = () => {
                     </>
                 )}
             </main>
-        </div >
+        </div>
     );
 };
 

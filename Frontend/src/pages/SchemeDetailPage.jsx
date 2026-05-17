@@ -9,10 +9,6 @@ const SchemeDetailPage = () => {
     const [scheme, setScheme] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        loadScheme();
-    }, [id]);
-
     const loadScheme = async () => {
         try {
             const res = await schemesAPI.getById(id);
@@ -24,6 +20,11 @@ const SchemeDetailPage = () => {
         }
         setLoading(false);
     };
+
+    useEffect(() => {
+        loadScheme();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [id]);
 
     if (loading) {
         return (

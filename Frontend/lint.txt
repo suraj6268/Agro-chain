@@ -1,0 +1,323 @@
+﻿
+> agro-chain-frontend@0.0.0 lint
+> eslint .
+
+
+C:\Users\Dell\OneDrive\Desktop\Agro-chain\Frontend\src\context\AuthContext.jsx
+   6:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      react-refresh/only-export-components
+  13:9   error  Error: Cannot access variable before it is declared
+
+`checkAuth` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  11 |
+  12 |     useEffect(() => {
+> 13 |         checkAuth();
+     |         ^^^^^^^^^ `checkAuth` accessed before it is declared
+  14 |     }, []);
+  15 |
+  16 |     const checkAuth = async () => {
+
+  14 |     }, []);
+  15 |
+> 16 |     const checkAuth = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 17 |         const token = localStorage.getItem('adminToken');
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 18 |         if (token) {
+     ΓÇª
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 30 |         setLoading(false);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 31 |     };
+     | ^^^^^^^ `checkAuth` is declared here
+  32 |
+  33 |     const login = async (email, password) => {
+  34 |         const res = await authAPI.login(email, password);  react-hooks/immutability
+
+C:\Users\Dell\OneDrive\Desktop\Agro-chain\Frontend\src\pages\DistributionPage.jsx
+   68:8   warning  React Hook useEffect has a missing dependency: 'fetchCityAllocations'. Either include it or remove the dependency array             react-hooks/exhaustive-deps
+   76:8   warning  React Hook useEffect has a missing dependency: 'fetchLedger'. Either include it or remove the dependency array                      react-hooks/exhaustive-deps
+  115:11  error    'handleAllocationSearch' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                              no-unused-vars
+  140:8   warning  React Hook useEffect has a missing dependency: 'fetchPublicComplaints'. Either include it or remove the dependency array            react-hooks/exhaustive-deps
+  169:8   warning  React Hook useEffect has missing dependencies: 'fetchLedger' and 'isSearching'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  240:18  error    'err' is defined but never used                                                                                                     no-unused-vars
+  264:18  error    'err' is defined but never used                                                                                                     no-unused-vars
+
+C:\Users\Dell\OneDrive\Desktop\Agro-chain\Frontend\src\pages\MarketPrice.jsx
+  59:8  warning  React Hook useEffect has a missing dependency: 'applyFilters'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\Dell\OneDrive\Desktop\Agro-chain\Frontend\src\pages\SchemeDetailPage.jsx
+  13:9  error    Error: Cannot access variable before it is declared
+
+`loadScheme` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  11 |
+  12 |     useEffect(() => {
+> 13 |         loadScheme();
+     |         ^^^^^^^^^^ `loadScheme` accessed before it is declared
+  14 |     }, [id]);
+  15 |
+  16 |     const loadScheme = async () => {
+
+  14 |     }, [id]);
+  15 |
+> 16 |     const loadScheme = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 17 |         try {
+     | ^^^^^^^^^^^^^
+> 18 |             const res = await schemesAPI.getById(id);
+     ΓÇª
+     | ^^^^^^^^^^^^^
+> 25 |         setLoading(false);
+     | ^^^^^^^^^^^^^
+> 26 |     };
+     | ^^^^^^^ `loadScheme` is declared here
+  27 |
+  28 |     if (loading) {
+  29 |         return (  react-hooks/immutability
+  14:8  warning  React Hook useEffect has a missing dependency: 'loadScheme'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               react-hooks/exhaustive-deps
+
+C:\Users\Dell\OneDrive\Desktop\Agro-chain\Frontend\src\pages\SchemesPage.jsx
+  55:18  error  'err' is defined but never used  no-unused-vars
+
+C:\Users\Dell\OneDrive\Desktop\Agro-chain\Frontend\src\pages\admin\AdminDashboard.jsx
+  17:9   error  Error: Cannot access variable before it is declared
+
+`loadStats` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  15 |
+  16 |     useEffect(() => {
+> 17 |         loadStats();
+     |         ^^^^^^^^^ `loadStats` accessed before it is declared
+  18 |         fetchComplaints();
+  19 |     }, []);
+  20 |
+
+  19 |     }, []);
+  20 |
+> 21 |     const loadStats = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 22 |         try {
+     | ^^^^^^^^^^^^^
+> 23 |             const res = await schemesAPI.getStats();
+     ΓÇª
+     | ^^^^^^^^^^^^^
+> 30 |         setLoading(false);
+     | ^^^^^^^^^^^^^
+> 31 |     };
+     | ^^^^^^^ `loadStats` is declared here
+  32 |
+  33 |     const fetchComplaints = async () => {
+  34 |         try {                                                                                                                             react-hooks/immutability
+  18:9   error  Error: Cannot access variable before it is declared
+
+`fetchComplaints` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  16 |     useEffect(() => {
+  17 |         loadStats();
+> 18 |         fetchComplaints();
+     |         ^^^^^^^^^^^^^^^ `fetchComplaints` accessed before it is declared
+  19 |     }, []);
+  20 |
+  21 |     const loadStats = async () => {
+
+  31 |     };
+  32 |
+> 33 |     const fetchComplaints = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 34 |         try {
+     | ^^^^^^^^^^^^^
+> 35 |             const token = localStorage.getItem('adminToken');
+     ΓÇª
+     | ^^^^^^^^^^^^^
+> 43 |         }
+     | ^^^^^^^^^^^^^
+> 44 |     };
+     | ^^^^^^^ `fetchComplaints` is declared here
+  45 |
+  46 |     const handleResolveComplaint = async (id) => {
+  47 |         const note = prompt("Enter resolution details (optional):");  react-hooks/immutability
+  67:18  error  'err' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      no-unused-vars
+  72:11  error  'handleLogout' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         no-unused-vars
+
+C:\Users\Dell\OneDrive\Desktop\Agro-chain\Frontend\src\pages\admin\DistributorManagement.jsx
+   9:20  error    'isSuperAdmin' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   no-unused-vars
+  27:9   error    Error: Cannot access variable before it is declared
+
+`loadDistributors` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  25 |             return;
+  26 |         }
+> 27 |         loadDistributors();
+     |         ^^^^^^^^^^^^^^^^ `loadDistributors` accessed before it is declared
+  28 |     }, [admin]);
+  29 |
+  30 |     const loadDistributors = async () => {
+
+  28 |     }, [admin]);
+  29 |
+> 30 |     const loadDistributors = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 31 |         setLoading(true);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 32 |         const res = await authAPI.getAllDistributors();
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 33 |         if (res.success) {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 34 |             setDistributors(res.data || []);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 35 |         }
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 36 |         setLoading(false);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 37 |     };
+     | ^^^^^^^ `loadDistributors` is declared here
+  38 |
+  39 |     const handleSubmit = async (e) => {
+  40 |         e.preventDefault();  react-hooks/immutability
+  28:8   warning  React Hook useEffect has a missing dependency: 'navigate'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    react-hooks/exhaustive-deps
+
+C:\Users\Dell\OneDrive\Desktop\Agro-chain\Frontend\src\pages\admin\InventoryManagement.jsx
+    2:10  error    'useAuth' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         no-unused-vars
+   31:9   error    Error: Cannot access variable before it is declared
+
+`fetchProducts` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  29 |
+  30 |     useEffect(() => {
+> 31 |         fetchProducts();
+     |         ^^^^^^^^^^^^^ `fetchProducts` accessed before it is declared
+  32 |         fetchStocks();
+  33 |     }, []);
+  34 |
+
+  50 |     };
+  51 |
+> 52 |     const fetchProducts = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 53 |         try {
+     | ^^^^^^^^^^^^^
+> 54 |             const res = await fetch('http://localhost:3000/api/products', {
+     ΓÇª
+     | ^^^^^^^^^^^^^
+> 67 |         setLoading(false);
+     | ^^^^^^^^^^^^^
+> 68 |     };
+     | ^^^^^^^ `fetchProducts` is declared here
+  69 |
+  70 |     const handleCreateProduct = async (e) => {
+  71 |         e.preventDefault();  react-hooks/immutability
+   32:9   error    Error: Cannot access variable before it is declared
+
+`fetchStocks` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  30 |     useEffect(() => {
+  31 |         fetchProducts();
+> 32 |         fetchStocks();
+     |         ^^^^^^^^^^^ `fetchStocks` accessed before it is declared
+  33 |     }, []);
+  34 |
+  35 |     const fetchStocks = async () => {
+
+  33 |     }, []);
+  34 |
+> 35 |     const fetchStocks = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 36 |         try {
+     | ^^^^^^^^^^^^^
+> 37 |             const res = await fetch('http://localhost:3000/api/stock', {
+     ΓÇª
+     | ^^^^^^^^^^^^^
+> 49 |         }
+     | ^^^^^^^^^^^^^
+> 50 |     };
+     | ^^^^^^^ `fetchStocks` is declared here
+  51 |
+  52 |     const fetchProducts = async () => {
+  53 |         try {            react-hooks/immutability
+   33:8   warning  React Hook useEffect has missing dependencies: 'fetchProducts' and 'fetchStocks'. Either include them or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   react-hooks/exhaustive-deps
+   90:18  error    'err' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        no-unused-vars
+  138:18  error    'err' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        no-unused-vars
+
+C:\Users\Dell\OneDrive\Desktop\Agro-chain\Frontend\src\pages\admin\NotificationsManagement.jsx
+  2:10  error  'useAuth' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\Dell\OneDrive\Desktop\Agro-chain\Frontend\src\pages\admin\SchemesManagement.jsx
+   16:13  error    'admin' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                no-unused-vars
+   16:28  error    'isSuperAdmin' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         no-unused-vars
+   32:9   error    Error: Cannot access variable before it is declared
+
+`loadSchemes` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  30 |
+  31 |     useEffect(() => {
+> 32 |         loadSchemes();
+     |         ^^^^^^^^^^^ `loadSchemes` accessed before it is declared
+  33 |     }, [search, category, status]);
+  34 |
+  35 |     const loadSchemes = async () => {
+
+  33 |     }, [search, category, status]);
+  34 |
+> 35 |     const loadSchemes = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 36 |         setLoading(true);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 37 |         const params = {};
+     ΓÇª
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 46 |         setLoading(false);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 47 |     };
+     | ^^^^^^^ `loadSchemes` is declared here
+  48 |
+  49 |     const handleSubmit = async (e) => {
+  50 |         e.preventDefault();  react-hooks/immutability
+   33:8   warning  React Hook useEffect has a missing dependency: 'loadSchemes'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       react-hooks/exhaustive-deps
+  116:11  error    'handleLogout' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         no-unused-vars
+
+C:\Users\Dell\OneDrive\Desktop\Agro-chain\Frontend\src\pages\admin\SuperAdmin.jsx
+  27:9   error    Error: Cannot access variable before it is declared
+
+`loadAdmins` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  25 |             return;
+  26 |         }
+> 27 |         loadAdmins();
+     |         ^^^^^^^^^^ `loadAdmins` accessed before it is declared
+  28 |     }, []);
+  29 |
+  30 |     const loadAdmins = async () => {
+
+  28 |     }, []);
+  29 |
+> 30 |     const loadAdmins = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 31 |         setLoading(true);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 32 |         const res = await authAPI.getAllAdmins();
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 33 |         if (res.success) {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 34 |             setAdmins(res.data || []);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 35 |         }
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 36 |         setLoading(false);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 37 |     };
+     | ^^^^^^^ `loadAdmins` is declared here
+  38 |
+  39 |     const handleSubmit = async (e) => {
+  40 |         e.preventDefault();  react-hooks/immutability
+  28:8   warning  React Hook useEffect has missing dependencies: 'isSuperAdmin' and 'navigate'. Either include them or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         react-hooks/exhaustive-deps
+  72:11  error    'handleLogout' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             no-unused-vars
+
+C:\Users\Dell\OneDrive\Desktop\Agro-chain\Frontend\src\pages\distributor\DistributorDashboard.jsx
+   51:8   warning  React Hook useEffect has missing dependencies: 'fetchComplaints', 'fetchHistory', 'fetchNotifications', and 'fetchStock'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  147:18  error    'err' is defined but never used                                                                                                                                               no-unused-vars
+  175:18  error    'err' is defined but never used                                                                                                                                               no-unused-vars
+  231:18  error    'err' is defined but never used                                                                                                                                               no-unused-vars
+
+Γ£û 39 problems (28 errors, 11 warnings)
+

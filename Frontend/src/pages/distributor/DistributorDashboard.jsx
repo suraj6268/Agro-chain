@@ -144,8 +144,8 @@ const DistributorDashboard = () => {
             } else {
                 alert(data.message || 'Failed to resolve complaint');
             }
-        } catch (err) {
-            alert('Server error resolving complaint');
+        } catch {
+            alert('Error updating complaint');
         }
     };
 
@@ -172,8 +172,8 @@ const DistributorDashboard = () => {
             } else {
                 alert(data.message);
             }
-        } catch (err) {
-            alert('Failed to send OTP');
+        } catch {
+            alert('Failed to process distribution');
         }
     };
 

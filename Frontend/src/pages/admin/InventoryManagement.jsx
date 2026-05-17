@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../../context/AuthContext';
 import { ShimmerTable } from '../../components/Shimmer';
 import './InventoryManagement.css';
 
@@ -27,45 +26,40 @@ const InventoryManagement = () => {
         quantity: ''
     });
 
-    useEffect(() => {
-        fetchProducts();
-        fetchStocks();
-    }, []);
-
     const fetchStocks = async () => {
         try {
             const res = await fetch('http://localhost:3000/api/stock', {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'ngrok-skip-browser-warning': 'true'
-                }
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }
             });
             const data = await res.json();
             if (data.success) {
                 setStocks(data.data);
             }
         } catch (err) {
-            console.error('Failed to fetch stocks', err);
+            console.error('Failed to fetch stocks:', err);
         }
     };
 
     const fetchProducts = async () => {
         try {
             const res = await fetch('http://localhost:3000/api/products', {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'ngrok-skip-browser-warning': 'true'
-                }
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }
             });
             const data = await res.json();
             if (data.success) {
                 setProducts(data.data);
             }
         } catch (err) {
-            console.error('Failed to fetch products', err);
+            console.error('Failed to fetch products:', err);
         }
         setLoading(false);
     };
+
+    useEffect(() => {
+        fetchProducts();
+        fetchStocks();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleCreateProduct = async (e) => {
         e.preventDefault();
@@ -74,7 +68,7 @@ const InventoryManagement = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
+                    'Authorization': `Bearer ${localStorage.getItem('adminToken')}`,
                     'ngrok-skip-browser-warning': 'true'
                 },
                 body: JSON.stringify(newProduct)
@@ -87,8 +81,8 @@ const InventoryManagement = () => {
             } else {
                 alert(data.message);
             }
-        } catch (err) {
-            alert('Failed to create product');
+        } catch {
+            alert('Server error while saving product');
         }
     };
 
@@ -99,7 +93,7 @@ const InventoryManagement = () => {
             const res = await fetch(`http://localhost:3000/api/products/${id}`, {
                 method: 'DELETE',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
+                    'Authorization': `Bearer ${localStorage.getItem('adminToken')}`,
                     'ngrok-skip-browser-warning': 'true'
                 }
             });
@@ -122,7 +116,7 @@ const InventoryManagement = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
+                    'Authorization': `Bearer ${localStorage.getItem('adminToken')}`,
                     'ngrok-skip-browser-warning': 'true'
                 },
                 body: JSON.stringify(allocation)
@@ -135,8 +129,8 @@ const InventoryManagement = () => {
             } else {
                 alert(data.message);
             }
-        } catch (err) {
-            alert('Failed to allocate stock');
+        } catch {
+            alert('Server error toggling stock status');
         }
     };
 

@@ -13,7 +13,6 @@ const CATEGORIES = [
 ];
 
 const SchemesManagement = () => {
-    const { admin, logout, isSuperAdmin } = useAuth();
     const navigate = useNavigate();
     const [schemes, setSchemes] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -28,23 +27,24 @@ const SchemesManagement = () => {
         applicationProcess: '', documents: [], state: 'All India'
     });
 
-    useEffect(() => {
-        loadSchemes();
-    }, [search, category, status]);
-
     const loadSchemes = async () => {
         setLoading(true);
         const params = {};
         if (search) params.search = search;
-        if (category) params.category = category;
-        if (status !== 'all') params.status = status;
+        if (category !== 'All') params.category = category;
+        if (status !== 'All') params.status = status;
 
-        const res = await schemesAPI.getAllAdmin(params);
+        const res = await schemesAPI.getAll(params);
         if (res.success) {
             setSchemes(res.data || []);
         }
         setLoading(false);
     };
+
+    useEffect(() => {
+        loadSchemes();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [search, category, status]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -113,10 +113,6 @@ const SchemesManagement = () => {
         });
     };
 
-    const handleLogout = () => {
-        logout();
-        navigate('/admin/login');
-    };
 
     return (
         <div className="schemes-management">

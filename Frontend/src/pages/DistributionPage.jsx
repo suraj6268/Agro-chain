@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, MapPin, Package, Users, Activity, ExternalLink, Filter, Clock, X, MessageSquareWarning } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import './DistributionPage.css';
@@ -13,6 +14,7 @@ const MP_CITIES = [
 ].sort();
 
 const DistributionPage = () => {
+    const { t } = useTranslation();
     const [stats, setStats] = useState({ totalQuantity: 0, citiesWithStock: 0, uniqueFarmers: 0, totalComplaints: 0, activeCitiesList: [] });
     const [ledger, setLedger] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -112,10 +114,7 @@ const DistributionPage = () => {
         }
     };
 
-    const handleAllocationSearch = (e) => {
-        e.preventDefault();
-        fetchCityAllocations();
-    };
+
 
     const fetchPublicComplaints = async () => {
         setPublicComplaintsLoading(true);
@@ -237,7 +236,7 @@ const DistributionPage = () => {
             } else {
                 setComplaintError(data.message || 'Failed to send OTP');
             }
-        } catch (err) {
+        } catch {
             setComplaintError('Server error while sending OTP');
         } finally {
             setComplaintLoading(false);
@@ -261,7 +260,7 @@ const DistributionPage = () => {
             } else {
                 setComplaintError(data.message || 'Invalid OTP or missing fields');
             }
-        } catch (err) {
+        } catch {
             setComplaintError('Server error while submitting complaint');
         } finally {
             setComplaintLoading(false);
@@ -283,8 +282,8 @@ const DistributionPage = () => {
         <div className="distribution-page">
             <div className="dist-hero">
                 <div className="dist-hero-content">
-                    <h1>Real-Time Distribution Ledger 📊</h1>
-                    <p>Transparent tracking of all agricultural fertilizer and seed allocations across the state.</p>
+                    <h1>{t('distribution.heroTitle')} 📊</h1>
+                    <p>{t('distribution.heroSubtitle')}</p>
                 </div>
             </div>
 
@@ -297,7 +296,7 @@ const DistributionPage = () => {
                         </div>
                         <div className="stat-body">
                             <h3>{stats.uniqueFarmers.toLocaleString()}</h3>
-                            <p>Unique Farmers Served</p>
+                            <p>{t('distribution.farmersServed')}</p>
                         </div>
                     </div>
                     <div className="stat-card clickable-stat" onClick={() => setShowPublicComplaintsModal(true)}>
@@ -306,7 +305,7 @@ const DistributionPage = () => {
                         </div>
                         <div className="stat-body">
                             <h3>{stats.totalComplaints?.toLocaleString() || 0}</h3>
-                            <p>Total Complaints Raised</p>
+                            <p>{t('distribution.totalComplaints')}</p>
                         </div>
                     </div>
                     <div className="stat-card clickable-stat" onClick={() => setShowCitiesModal(true)}>
@@ -315,7 +314,7 @@ const DistributionPage = () => {
                         </div>
                         <div className="stat-body">
                             <h3>{stats.citiesWithStock?.toLocaleString() || 0} / {MP_CITIES.length}</h3>
-                            <p>Cities with Active Stock</p>
+                            <p>{t('distribution.citiesActiveStock')}</p>
                         </div>
                     </div>
                 </div>
@@ -323,8 +322,8 @@ const DistributionPage = () => {
                 {/* City Allocations Overview Tracking Section */}
                 <div className="dist-lookup-section" style={{ marginBottom: hasSearchedAllocations ? '1.5rem' : '2rem' }}>
                     <div className="lookup-header">
-                        <h2>Regional Allocation Overview</h2>
-                        <p>Select a city to reveal regional distribution metrics.</p>
+                        <h2>{t('distribution.regionalOverview')}</h2>
+                        <p>{t('distribution.selectCityMsg')}</p>
                     </div>
 
                     <form className="dist-search-bar" onSubmit={(e) => e.preventDefault()}>
@@ -345,7 +344,7 @@ const DistributionPage = () => {
                                 color: allocFilterCity ? '#0f172a' : '#64748b'
                             }}
                         >
-                            <option value="">Select City...</option>
+                            <option value="">{t('distribution.selectCity')}</option>
                             {MP_CITIES.map((city, idx) => (
                                 <option key={idx} value={city}>{city}</option>
                             ))}
@@ -378,27 +377,27 @@ const DistributionPage = () => {
                                             </div>
                                             <div className="alloc-card-body">
                                                 <div className="alloc-metric">
-                                                    <span className="alloc-label">Total Allocated</span>
-                                                    <span className="alloc-value">{alloc.totalAllocated.toLocaleString()} <small>Units</small></span>
+                                                    <span className="alloc-label">{t('distribution.totalAllocated')}</span>
+                                                    <span className="alloc-value">{alloc.totalAllocated.toLocaleString()} <small>{t('distribution.units')}</small></span>
                                                 </div>
                                                 <div className="alloc-metric">
-                                                    <span className="alloc-label">Distributed</span>
-                                                    <span className="alloc-value text-green">{alloc.totalDistributed.toLocaleString()} <small>Units</small></span>
+                                                    <span className="alloc-label">{t('distribution.distributed')}</span>
+                                                    <span className="alloc-value text-green">{alloc.totalDistributed.toLocaleString()} <small>{t('distribution.units')}</small></span>
                                                 </div>
                                                 <div className="alloc-metric">
-                                                    <span className="alloc-label">Available Stock</span>
-                                                    <span className="alloc-value text-orange">{alloc.currentAvailable.toLocaleString()} <small>Units</small></span>
+                                                    <span className="alloc-label">{t('distribution.availableStock')}</span>
+                                                    <span className="alloc-value text-orange">{alloc.currentAvailable.toLocaleString()} <small>{t('distribution.units')}</small></span>
                                                 </div>
                                             </div>
                                             <div className="alloc-progress-container">
                                                 <div className="alloc-progress-bar" style={{ width: `${Math.min(100, (alloc.totalDistributed / alloc.totalAllocated) * 100) || 0}%` }}></div>
                                             </div>
-                                            <p className="alloc-progress-text">{Math.round((alloc.totalDistributed / alloc.totalAllocated) * 100) || 0}% Completed</p>
+                                            <p className="alloc-progress-text">{Math.round((alloc.totalDistributed / alloc.totalAllocated) * 100) || 0}% {t('distribution.completed')}</p>
 
                                             {alloc.lastUpdated && (
                                                 <div className="alloc-last-update">
                                                     <Clock size={12} />
-                                                    Updated: {formatDateOnly(alloc.lastUpdated)}
+                                                    {t('distribution.updated')}: {formatDateOnly(alloc.lastUpdated)}
                                                 </div>
                                             )}
                                         </div>
@@ -406,7 +405,7 @@ const DistributionPage = () => {
                                 </div>
                             ) : (
                                 <div className="ledger-empty">
-                                    <p>No regional allocation data found.</p>
+                                    <p>{t('distribution.noAllocData')}</p>
                                 </div>
                             )}
                         </div>
@@ -416,19 +415,19 @@ const DistributionPage = () => {
                 {/* Tracking & Search Section */}
                 <div className="dist-lookup-section" style={{ marginBottom: isSearching ? '1.5rem' : '2rem' }}>
                     <div className="lookup-header">
-                        <h2>Beneficiary Lookup</h2>
-                        <p>Search via Farmer ID to see personal acquisition history.</p>
+                        <h2>{t('distribution.beneficiaryLookup')}</h2>
+                        <p>{t('distribution.searchFarmerMsg')}</p>
                     </div>
 
                     <form className="dist-search-bar" onSubmit={handleSearch}>
                         <Search size={20} className="search-icon" />
                         <input
                             type="text"
-                            placeholder="Enter Farmer ID (e.g., AADHAAR/KISAAN ID)..."
+                            placeholder={t('distribution.searchFarmerPlaceholder')}
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
-                        <button type="submit" className="search-btn">Search</button>
+                        <button type="submit" className="search-btn">{t('distribution.searchBtn')}</button>
                     </form>
                 </div>
 
@@ -436,25 +435,25 @@ const DistributionPage = () => {
                 {isSearching && (
                     <div className="dist-ledger-section" style={{ marginBottom: '2rem' }}>
                         <div className="ledger-header-panel">
-                            <h2>Records for Farmer ID: {searchQuery}</h2>
+                            <h2>{t('distribution.recordsFor')} {searchQuery}</h2>
                             <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                                 {hasActiveComplaint ? (
                                     <div style={{
                                         backgroundColor: '#fef2f2', border: '1px solid #fca5a5', color: '#ef4444',
                                         padding: '0.5rem 1rem', borderRadius: '6px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem'
                                     }}>
-                                        <MessageSquareWarning size={18} /> Complaint Status: {activeComplaintStatus}
+                                        <MessageSquareWarning size={18} /> {t('distribution.complaintStatus')} {activeComplaintStatus}
                                     </div>
                                 ) : (
                                     <button className="complaint-action-btn" onClick={openComplaintModal} style={{
                                         backgroundColor: '#ef4444', color: 'white', padding: '0.5rem 1rem', borderRadius: '6px', border: 'none', cursor: 'pointer', fontWeight: '500', transition: 'background 0.2s'
                                     }}>
                                         <MessageSquareWarning size={16} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }} />
-                                        Raise a Complaint
+                                        {t('distribution.raiseComplaint')}
                                     </button>
                                 )}
                                 <button className="clear-search-btn" onClick={() => { setSearchQuery(''); setIsSearching(false); fetchLedger(); }}>
-                                    Clear Search
+                                    {t('distribution.clearSearch')}
                                 </button>
                             </div>
                         </div>
@@ -470,12 +469,12 @@ const DistributionPage = () => {
                                 <table className="ledger-table">
                                     <thead>
                                         <tr>
-                                            <th>Date / Time</th>
-                                            <th>Beneficiary Name</th>
-                                            <th>Location</th>
-                                            <th>Product Type</th>
-                                            <th>Quantity Allocated</th>
-                                            <th>Verification</th>
+                                            <th>{t('distribution.dateTime')}</th>
+                                            <th>{t('distribution.beneficiaryName')}</th>
+                                            <th>{t('distribution.location')}</th>
+                                            <th>{t('distribution.productType')}</th>
+                                            <th>{t('distribution.quantityAlloc')}</th>
+                                            <th>{t('distribution.verification')}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -484,7 +483,7 @@ const DistributionPage = () => {
                                                 <td className="date-col">{formatDate(record.createdAt)}</td>
                                                 <td className="farmer-col">
                                                     <div style={{ fontWeight: '600', color: '#1e293b' }}>{record.farmerName}</div>
-                                                    <div className="farmer-id blur-sub">ID: ****{String(record.farmerId).slice(-4)}</div>
+                                                    <div className="farmer-id blur-sub">{t('distribution.id')}: ****{String(record.farmerId).slice(-4)}</div>
                                                 </td>
                                                 <td className="location-col">
                                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -522,7 +521,7 @@ const DistributionPage = () => {
                     <div className="dist-ledger-section">
                         <div className="ledger-header-panel" style={{ flexWrap: 'wrap', gap: '1rem' }}>
                             <div>
-                                <h2>Latest State Distributions</h2>
+                                <h2>{t('distribution.latestDistributions')}</h2>
                             </div>
 
                             {/* Location Filters */}
@@ -537,7 +536,7 @@ const DistributionPage = () => {
                                     }}
                                     className="filter-input"
                                 >
-                                    <option value="">All Cities</option>
+                                    <option value="">{t('distribution.allCities')}</option>
                                     {cities.map((city, idx) => (
                                         <option key={idx} value={city}>{city}</option>
                                     ))}
@@ -546,7 +545,7 @@ const DistributionPage = () => {
                                 {filterCity && (
                                     <input
                                         type="text"
-                                        placeholder="Type Village Name..."
+                                        placeholder={t('distribution.typeVillage')}
                                         value={filterVillage}
                                         onChange={(e) => setFilterVillage(e.target.value)}
                                         className="filter-input"
@@ -567,12 +566,12 @@ const DistributionPage = () => {
                                 <table className="ledger-table">
                                     <thead>
                                         <tr>
-                                            <th>Date / Time</th>
-                                            <th>Beneficiary Name</th>
-                                            <th>Location</th>
-                                            <th>Product Type</th>
-                                            <th>Quantity Allocated</th>
-                                            <th>Verification</th>
+                                            <th>{t('distribution.dateTime')}</th>
+                                            <th>{t('distribution.beneficiaryName')}</th>
+                                            <th>{t('distribution.location')}</th>
+                                            <th>{t('distribution.productType')}</th>
+                                            <th>{t('distribution.quantityAlloc')}</th>
+                                            <th>{t('distribution.verification')}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -581,7 +580,7 @@ const DistributionPage = () => {
                                                 <td className="date-col">{formatDate(record.createdAt)}</td>
                                                 <td className="farmer-col">
                                                     <div style={{ fontWeight: '600', color: '#1e293b' }}>{record.farmerName}</div>
-                                                    <div className="farmer-id blur-sub">ID: ****{String(record.farmerId).slice(-4)}</div>
+                                                    <div className="farmer-id blur-sub">{t('distribution.id')}: ****{String(record.farmerId).slice(-4)}</div>
                                                 </td>
                                                 <td className="location-col">
                                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -591,13 +590,13 @@ const DistributionPage = () => {
                                                 </td>
                                                 <td className="product-col">
                                                     <span style={{ fontWeight: '500', color: '#475569' }}>
-                                                        {record.product?.name || 'Unknown Product'}
+                                                        {record.product?.name || t('distribution.unknownProduct')}
                                                         {record.product?.type ? ` (${record.product.type})` : ''}
                                                     </span>
                                                 </td>
-                                                <td className="quantity-col">{record.quantity} Units</td>
+                                                <td className="quantity-col">{record.quantity} {t('distribution.units')}</td>
                                                 <td className="status-col">
-                                                    <span className="secure-badge">OTP Verified ✓</span>
+                                                    <span className="secure-badge">{t('distribution.otpVerified')}</span>
                                                 </td>
                                             </tr>
                                         ))}
@@ -606,8 +605,8 @@ const DistributionPage = () => {
                             ) : (
                                 <div className="ledger-empty">
                                     <Package size={48} />
-                                    <h3>No Records Found</h3>
-                                    <p>We couldn't find any distribution history matching the criteria.</p>
+                                    <h3>{t('distribution.noRecordsTitle')}</h3>
+                                    <p>{t('distribution.noRecordsMsg')}</p>
                                 </div>
                             )}
                         </div>
@@ -620,7 +619,7 @@ const DistributionPage = () => {
                 <div className="cities-modal-overlay" onClick={() => setShowCitiesModal(false)}>
                     <div className="cities-modal-content" onClick={e => e.stopPropagation()}>
                         <div className="cities-modal-header">
-                            <h3>Cities with Active Stock</h3>
+                            <h3>{t('distribution.citiesActiveModal')}</h3>
                             <button className="cities-modal-close" onClick={() => setShowCitiesModal(false)}>
                                 <X size={20} />
                             </button>
@@ -636,7 +635,7 @@ const DistributionPage = () => {
                                     ))}
                                 </ul>
                             ) : (
-                                <p className="no-cities-text">No cities currently have active stock.</p>
+                                <p className="no-cities-text">{t('distribution.noCitiesActive')}</p>
                             )}
                         </div>
                     </div>
@@ -648,7 +647,7 @@ const DistributionPage = () => {
                 <div className="modal-overlay" onClick={() => setShowPublicComplaintsModal(false)}>
                     <div className="grievance-modal-container" onClick={e => e.stopPropagation()}>
                         <div className="grievance-header">
-                            <h3><MessageSquareWarning size={28} /> Grievance Registry</h3>
+                            <h3><MessageSquareWarning size={28} /> {t('distribution.grievanceRegistry')}</h3>
                             <button className="grievance-close" onClick={() => setShowPublicComplaintsModal(false)}>
                                 <X size={24} />
                             </button>
@@ -664,7 +663,7 @@ const DistributionPage = () => {
                                     className="form-input"
                                     style={{ flex: 1, margin: 0, border: 'none', boxShadow: 'none', background: 'transparent' }}
                                 >
-                                    <option value="">Filter by All Cities</option>
+                                    <option value="">{t('distribution.filterAllCities')}</option>
                                     {MP_CITIES.map(c => <option key={c} value={c}>{c}</option>)}
                                 </select>
                             </div>
@@ -683,7 +682,7 @@ const DistributionPage = () => {
                                                     <h4 className="grievance-card-title">{comp.type}</h4>
                                                     <div className="grievance-meta">
                                                         <span className="grievance-meta-item"><MapPin size={14} /> {comp.city}</span>
-                                                        <span className="grievance-meta-item"><Users size={14} /> By {comp.farmerName}</span>
+                                                        <span className="grievance-meta-item"><Users size={14} /> {t('distribution.by')} {comp.farmerName}</span>
                                                         <span className="grievance-meta-item"><Clock size={14} /> {formatDateOnly(comp.createdAt)}</span>
                                                     </div>
                                                 </div>
@@ -697,7 +696,7 @@ const DistributionPage = () => {
                                             {comp.status === 'Resolved' && comp.resolutionNote && (
                                                 <div className="grievance-resolution">
                                                     <span className="grievance-resolution-label">
-                                                        <Activity size={16} /> Official Resolution Note
+                                                        <Activity size={16} /> {t('distribution.resolutionNote')}
                                                     </span>
                                                     <p className="grievance-resolution-text">{comp.resolutionNote}</p>
                                                 </div>
@@ -708,7 +707,7 @@ const DistributionPage = () => {
                             ) : (
                                 <div className="grievance-empty">
                                     <MessageSquareWarning size={64} className="grievance-empty-icon" />
-                                    <p className="grievance-empty-text">No complaints recorded {publicComplaintsCity ? `in ${publicComplaintsCity}` : 'statewide'}.</p>
+                                    <p className="grievance-empty-text">{t('distribution.noComplaints')} {publicComplaintsCity ? `${t('distribution.in')} ${publicComplaintsCity}` : t('distribution.statewide')}.</p>
                                 </div>
                             )}
                         </div>
@@ -721,7 +720,7 @@ const DistributionPage = () => {
                 <div className="cities-modal-overlay" onClick={() => setShowComplaintModal(false)}>
                     <div className="cities-modal-content" onClick={e => e.stopPropagation()} style={{ maxWidth: '450px' }}>
                         <div className="cities-modal-header">
-                            <h3>Raise a Complaint</h3>
+                            <h3>{t('distribution.raiseComplaintModal')}</h3>
                             <button className="cities-modal-close" onClick={() => setShowComplaintModal(false)}>
                                 <X size={20} />
                             </button>
@@ -742,57 +741,57 @@ const DistributionPage = () => {
                                     {complaintStep === 1 ? (
                                         <form onSubmit={handleSendComplaintOTP} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                                             <div>
-                                                <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '0.25rem', fontWeight: '500' }}>Farmer Name</label>
-                                                <input type="text" className="filter-input" style={{ width: '100%' }} value={complaintForm.farmerName} onChange={e => setComplaintForm({ ...complaintForm, farmerName: e.target.value })} placeholder="Your full name" required />
+                                                <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '0.25rem', fontWeight: '500' }}>{t('distribution.farmerName')}</label>
+                                                <input type="text" className="filter-input" style={{ width: '100%' }} value={complaintForm.farmerName} onChange={e => setComplaintForm({ ...complaintForm, farmerName: e.target.value })} placeholder={t('distribution.farmerNamePlaceholder')} required />
                                             </div>
                                             <div>
-                                                <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '0.25rem', fontWeight: '500' }}>Phone Number (10 Digits)</label>
-                                                <input type="tel" className="filter-input" style={{ width: '100%' }} pattern="[0-9]{10}" value={complaintForm.mobile} onChange={e => setComplaintForm({ ...complaintForm, mobile: e.target.value })} placeholder="e.g. 9876543210" required />
+                                                <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '0.25rem', fontWeight: '500' }}>{t('distribution.phone')}</label>
+                                                <input type="tel" className="filter-input" style={{ width: '100%' }} pattern="[0-9]{10}" value={complaintForm.mobile} onChange={e => setComplaintForm({ ...complaintForm, mobile: e.target.value })} placeholder={t('distribution.phonePlaceholder')} required />
                                             </div>
                                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                                                 <div>
-                                                    <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '0.25rem', fontWeight: '500' }}>City / District</label>
+                                                    <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '0.25rem', fontWeight: '500' }}>{t('distribution.cityDistrict')}</label>
                                                     <select className="filter-input" style={{ width: '100%' }} value={complaintForm.city} onChange={e => setComplaintForm({ ...complaintForm, city: e.target.value })} required>
-                                                        <option value="">Select City...</option>
+                                                        <option value="">{t('distribution.selectCity')}</option>
                                                         {MP_CITIES.map(c => <option key={c} value={c}>{c}</option>)}
                                                     </select>
                                                 </div>
                                                 <div>
-                                                    <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '0.25rem', fontWeight: '500' }}>Complaint Type</label>
+                                                    <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '0.25rem', fontWeight: '500' }}>{t('distribution.complaintType')}</label>
                                                     <select className="filter-input" style={{ width: '100%' }} value={complaintForm.type} onChange={e => setComplaintForm({ ...complaintForm, type: e.target.value })} required>
-                                                        <option value="Under-distribution">Under-distribution</option>
-                                                        <option value="Wrong Product">Wrong Product</option>
-                                                        <option value="Overcharging">Overcharging</option>
-                                                        <option value="Misconduct">Misconduct / Harassment</option>
-                                                        <option value="Other">Other</option>
+                                                        <option value="Under-distribution">{t('distribution.underDist')}</option>
+                                                        <option value="Wrong Product">{t('distribution.wrongProduct')}</option>
+                                                        <option value="Overcharging">{t('distribution.overcharging')}</option>
+                                                        <option value="Misconduct">{t('distribution.misconduct')}</option>
+                                                        <option value="Other">{t('distribution.other')}</option>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div>
-                                                <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '0.25rem', fontWeight: '500' }}>Description</label>
-                                                <textarea className="filter-input" style={{ width: '100%', minHeight: '80px', resize: 'vertical' }} value={complaintForm.description} onChange={e => setComplaintForm({ ...complaintForm, description: e.target.value })} placeholder="Please describe the issue in detail..." required></textarea>
+                                                <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '0.25rem', fontWeight: '500' }}>{t('distribution.descLabel')}</label>
+                                                <textarea className="filter-input" style={{ width: '100%', minHeight: '80px', resize: 'vertical' }} value={complaintForm.description} onChange={e => setComplaintForm({ ...complaintForm, description: e.target.value })} placeholder={t('distribution.descPlaceholder')} required></textarea>
                                             </div>
                                             <button type="submit" disabled={complaintLoading} className="search-btn" style={{ width: '100%', borderRadius: '8px', marginTop: '0.5rem', background: '#3b82f6' }}>
-                                                {complaintLoading ? 'Processing...' : 'Send OTP via SMS'}
+                                                {complaintLoading ? t('distribution.processing') : t('distribution.sendOtp')}
                                             </button>
                                         </form>
                                     ) : (
                                         <form onSubmit={handleSubmitComplaint} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                                             <div style={{ padding: '1rem', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
                                                 <p style={{ color: '#64748b', fontSize: '0.95rem', margin: 0 }}>
-                                                    An OTP has been sent to <strong>+91 {complaintForm.mobile}</strong>.
+                                                    {t('distribution.otpSent')} <strong>+91 {complaintForm.mobile}</strong>.
                                                 </p>
                                             </div>
                                             <div>
-                                                <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '0.5rem', fontWeight: '500', textAlign: 'center' }}>Enter 6-Digit Verification Code</label>
+                                                <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '0.5rem', fontWeight: '500', textAlign: 'center' }}>{t('distribution.enterOtp')}</label>
                                                 <input type="text" className="filter-input" style={{ width: '100%', textAlign: 'center', letterSpacing: '8px', fontSize: '1.25rem', padding: '0.75rem' }} maxLength="6" value={complaintForm.otp} onChange={e => setComplaintForm({ ...complaintForm, otp: e.target.value.replace(/\D/g, '') })} required autoFocus placeholder="------" />
                                             </div>
                                             <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
                                                 <button type="button" onClick={() => setComplaintStep(1)} className="clear-search-btn" style={{ flex: 1, padding: '0.75rem' }}>
-                                                    Go Back
+                                                    {t('distribution.goBack')}
                                                 </button>
                                                 <button type="submit" disabled={complaintLoading} className="search-btn" style={{ flex: 2, borderRadius: '8px', background: '#10b981', padding: '0.75rem' }}>
-                                                    {complaintLoading ? 'Submitting...' : 'Verify & Submit Complaint'}
+                                                    {complaintLoading ? t('distribution.submitting') : t('distribution.verifySubmit')}
                                                 </button>
                                             </div>
                                         </form>

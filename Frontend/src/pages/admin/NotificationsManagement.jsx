@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../context/AuthContext';
 import { Bell, Plus, Trash2, Calendar, AlertTriangle, ShieldAlert, TrendingUp, Info, Send } from 'lucide-react';
 import './InventoryManagement.css';
 import './NotificationsManagement.css';

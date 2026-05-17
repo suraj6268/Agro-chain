@@ -3,15 +3,12 @@ import { authAPI } from '../services/api';
 
 const AuthContext = createContext(null);
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
     const [admin, setAdmin] = useState(null);
     const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        checkAuth();
-    }, []);
 
     const checkAuth = async () => {
         const token = localStorage.getItem('adminToken');
@@ -29,6 +26,11 @@ export const AuthProvider = ({ children }) => {
         }
         setLoading(false);
     };
+
+    useEffect(() => {
+        checkAuth();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const login = async (email, password) => {
         const res = await authAPI.login(email, password);
