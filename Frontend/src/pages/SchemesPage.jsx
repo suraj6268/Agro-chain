@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import SchemeCard from '../components/SchemeCard';
 import { ShimmerGrid } from '../components/Shimmer';
 import { schemesAPI } from '../services/api';
+import Chatbot from '../components/Chatbot';
 import './SchemesPage.css';
 
 const SchemesPage = () => {
@@ -140,6 +141,7 @@ const SchemesPage = () => {
                     </div>
                 )}
             </div>
+            <Chatbot />
         </div>
     );
 };
